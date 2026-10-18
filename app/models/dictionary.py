@@ -3,7 +3,7 @@ from sqlalchemy import Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 
-class Translate(Base):
+class Dictionary(Base):
     __tablename__ = "translates"
 
     id: Mapped[int] = mapped_column(primary_key=True)
