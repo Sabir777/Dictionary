@@ -1,4 +1,4 @@
-from db.Engine import engine
+from db import engine, init_db
 from models.dictionary import Dictionary
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -23,6 +23,7 @@ class Translate:
 
 
 if __name__ == "__main__":
+    init_db()
 
     for translate in Translate().get_translate("Hello"):
         print(translate)
