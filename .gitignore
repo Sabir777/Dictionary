@@ -1,2 +1,3 @@
 /sql_venv/*
 **/__pycache__/*
+**/*.db
