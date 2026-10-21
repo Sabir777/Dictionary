@@ -1,7 +1,10 @@
 from db import engine, init_db
-from models.dictionary import Dictionary
+from models import Dictionary
+from rich.console import Console
+from rich.table import Table
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from time import sleep
 
 
 def add_translate(word: str, value: str):
@@ -26,7 +29,7 @@ def get_translate(word: str):
 
 
 if __name__ == "__main__":
-    init_db() # создать таблицы
+    init_db()  # создать таблицы
 
     """
     Переключение режимов работы
@@ -45,27 +48,46 @@ if __name__ == "__main__":
             case "s":
                 while True:
                     var = input()
-                    if var in ('sr', 'a', 'u', 'd', 'q'):
+                    if var in ("sr", "a", "u", "d", "q"):
                         break
+
+                    table = Table(title="Пользователи")
+                    table.add_column("ID", justify="right")
+                    table.add_column("Имя")
+                    table.add_column("Email")
+
+                    table.add_row("1", "Андрей", "a@example.com")
+                    table.add_row("2", "Иван", "i@example.com")
+
+                    Console().print(table)
             case "sr":
                 while True:
                     var = input()
-                    if var in ('s', 'a', 'u', 'd', 'q'):
+                    if var in ("s", "a", "u", "d", "q"):
                         break
+                    print("sr - пусто")
             case "a":
                 while True:
                     var = input()
-                    if var in ('sr', 's', 'u', 'd', 'q'):
+                    if var in ("sr", "s", "u", "d", "q"):
                         break
+                    print("a - пусто")
             case "u":
                 while True:
                     var = input()
-                    if var in ('sr', 's', 'a', 'd', 'q'):
+                    if var in ("sr", "s", "a", "d", "q"):
                         break
+                    print("u - пусто")
             case "d":
                 while True:
                     var = input()
-                    if var in ('sr', 's', 'a', 'u', 'q'):
+                    if var in ("sr", "s", "a", "u", "q"):
                         break
+                    print("d - пусто")
+        
 
-
+        # Выход из программы
+        table = Table(title="")
+        table.add_column("Выход из программы", justify="center")
+        table.add_row("До встречи 🤚")
+        Console().print(table)
