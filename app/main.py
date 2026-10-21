@@ -28,5 +28,22 @@ def get_translate(word: str):
 if __name__ == "__main__":
     init_db()
 
-    for translate in get_translate("Hello"):
-        print(translate)
+    # for translate in get_translate("Hello"):
+        # print(translate)
+
+    var = "s"
+    while var != "q":
+        match var:
+            case "s":
+                while True:
+                    var = input()
+                    if var in ('a', 'u', 'q'):
+                        break
+                        
+            case "d":
+                add_translate_dict({"Hello": "Привет", "World": "Мир"})
+            case "q":
+                break
+            case _:
+
+
