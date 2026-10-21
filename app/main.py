@@ -26,10 +26,18 @@ def get_translate(word: str):
 
 
 if __name__ == "__main__":
-    init_db()
+    init_db() # создать таблицы
 
-    # for translate in get_translate("Hello"):
-        # print(translate)
+    """
+    Переключение режимов работы
+
+    s - выполнить перевод слова
+    sr - выполнить перевод русского слова
+    a - добавить новый перевод
+    u - редактировать перевод
+    d - удалить перевод
+    q - выход из программы
+    """
 
     var = "s"
     while var != "q":
@@ -37,13 +45,27 @@ if __name__ == "__main__":
             case "s":
                 while True:
                     var = input()
-                    if var in ('a', 'u', 'q'):
+                    if var in ('sr', 'a', 'u', 'd', 'q'):
                         break
-                        
+            case "sr":
+                while True:
+                    var = input()
+                    if var in ('s', 'a', 'u', 'd', 'q'):
+                        break
+            case "a":
+                while True:
+                    var = input()
+                    if var in ('sr', 's', 'u', 'd', 'q'):
+                        break
+            case "u":
+                while True:
+                    var = input()
+                    if var in ('sr', 's', 'a', 'd', 'q'):
+                        break
             case "d":
-                add_translate_dict({"Hello": "Привет", "World": "Мир"})
-            case "q":
-                break
-            case _:
+                while True:
+                    var = input()
+                    if var in ('sr', 's', 'a', 'u', 'q'):
+                        break
 
 
