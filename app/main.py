@@ -4,7 +4,6 @@ from rich.console import Console
 from rich.table import Table
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from time import sleep
 
 
 def add_translate(word: str, value: str):
@@ -47,18 +46,24 @@ if __name__ == "__main__":
         match var:
             case "s":
                 while True:
-                    var = input()
+                    var = input("Введите слово: ")
                     if var in ("sr", "a", "u", "d", "q"):
                         break
 
-                    table = Table(title="Пользователи")
-                    table.add_column("ID", justify="right")
-                    table.add_column("Имя")
-                    table.add_column("Email")
+                    result = get_translate(var)
+                    if not result:
+                        print("Слово не найдено")
+                        continue
 
-                    table.add_row("1", "Андрей", "a@example.com")
-                    table.add_row("2", "Иван", "i@example.com")
-
+                    table = Table(title=var)
+                    table.add_column("№", justify="right")
+                    table.add_column("Значение")
+                    table.add_column("Context")
+                    table.add_column("Контекст")
+                    table.add_column("Комментарий")
+                    for i, v in enumerate(result):
+                        table.add_row(str(i + 1), v.value, v.context_en, v.context_ru, v.comment)
+                    print()
                     Console().print(table)
             case "sr":
                 while True:
@@ -84,7 +89,6 @@ if __name__ == "__main__":
                     if var in ("sr", "s", "a", "u", "q"):
                         break
                     print("d - пусто")
-        
 
         # Выход из программы
         table = Table(title="")
