@@ -24,7 +24,7 @@ def add_translate_dict(translates: dict):
 def get_translate(word: str):
     """Получить перевод по слову"""
     with Session(engine) as session:
-        return session.scalars(select(Dictionary).where(Dictionary.word == word)).all()
+        return session.scalars(select(Dictionary).where(Dictionary.word.ilike(f'%{word}%')).all()
 
 
 if __name__ == "__main__":
