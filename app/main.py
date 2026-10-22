@@ -55,14 +55,29 @@ if __name__ == "__main__":
                         print("Слово не найдено")
                         continue
 
-                    table = Table(title=var)
-                    table.add_column("№", justify="right")
-                    table.add_column("Значение")
-                    table.add_column("Context")
-                    table.add_column("Контекст")
-                    table.add_column("Комментарий")
-                    for i, v in enumerate(result):
-                        table.add_row(str(i + 1), v.value, v.context_en, v.context_ru, v.comment)
+                    H = "bold white on blue"
+                    H1 = "bold white on yellow"
+                    H2 = "bold white on magenta"
+                    H3 = "bold white on green"
+                    H4 = "bold white on cyan"
+                    H5 = "bold white on bright_black"
+                    table = Table(show_lines=True, header_style=H)
+                    table.add_column("ID", justify="center")
+                    for v in result:
+                        table.add_row(str(v.id))
+                        table.add_row("Word", style=H1)
+                        table.add_row(v.word)
+                        table.add_row("Перевод", style=H2)
+                        table.add_row(v.value)
+                        if v.context_en:
+                            table.add_row("Context", style=H3)
+                            table.add_row(v.context_en)
+                        if v.context_ru:
+                            table.add_row("Контекст", style=H4)
+                            table.add_row(v.context_ru)
+                        if v.comment:
+                            table.add_row("Комментарий", style=H5)
+                            table.add_row(v.comment)
                     print()
                     Console().print(table)
             case "sr":
