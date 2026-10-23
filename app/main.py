@@ -39,7 +39,7 @@ def get_translate_ru_to_en(_word: str):
         ).all()
 
 
-def print_translate(v: Dictionary) -> None:
+def print_translate(title: str, v: Dictionary) -> None:
     """Напечатать перевод"""
 
     H = "bold white on blue"
@@ -49,7 +49,7 @@ def print_translate(v: Dictionary) -> None:
     H4 = "bold white on cyan"
     H5 = "bold white on bright_black"
 
-    table = Table(show_lines=True, header_style=H)
+    table = Table(title=title, show_lines=True, header_style=H)
     table.add_column("ID", justify="center")
     table.add_row(str(v.id))
     table.add_row("Word", style=H1)
@@ -98,8 +98,8 @@ if __name__ == "__main__":
                         print("Слово не найдено")
                         continue
                     else:
-                        for v in result:
-                            print_translate(v)
+                        for i, v in enumerate(result):
+                            print_translate(str(i + 1), v)
             case "sr":
                 while True:
                     print("================================")
@@ -115,8 +115,8 @@ if __name__ == "__main__":
                         print("Слово не найдено")
                         continue
                     else:
-                        for v in result:
-                            print_translate(v)
+                        for i, v in enumerate(result):
+                            print_translate(str(i + 1), v)
             case "a":
                 while True:
                     var = input()
