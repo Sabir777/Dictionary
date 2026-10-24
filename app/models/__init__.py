@@ -1,4 +1,4 @@
 from .base import Base
-from .dictionary import Dictionary
+from .dictionary import Context, Dictionary
 
-__all__ = ["Base", "Dictionary"]
+__all__ = ["Base", "Context", "Dictionary"]

@@ -1,7 +1,7 @@
 import readline  # noqa: F401
 
 from db import engine, init_db
-from models import Dictionary
+from models import Dictionary, Context
 from rich.console import Console
 from rich.table import Table
 from sqlalchemy import String, inspect, select
@@ -57,12 +57,12 @@ def print_translate(title: str, v: Dictionary) -> None:
     table.add_row(v.word)
     table.add_row("Перевод", style=H2)
     table.add_row(v.value)
-    if v.context_en:
-        table.add_row("Context", style=H3)
-        table.add_row(v.context_en)
-    if v.context_ru:
-        table.add_row("Контекст", style=H4)
-        table.add_row(v.context_ru)
+    # if v.context_en:
+    #     table.add_row("Context", style=H3)
+    #     table.add_row(v.context_en)
+    # if v.context_ru:
+    #     table.add_row("Контекст", style=H4)
+    #     table.add_row(v.context_ru)
     if v.comment:
         table.add_row("Комментарий", style=H5)
         table.add_row(v.comment)
