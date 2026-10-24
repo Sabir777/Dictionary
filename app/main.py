@@ -70,7 +70,7 @@ def print_translate(title: str, v: Dictionary) -> None:
 
 
 def normal_to_all_lower() -> None:
-    """Перевод всех строковых полей в нижний регистр"""
+    """Нормализация: перевод всех строковых полей в нижний регистр"""
     str_cols = [
         c.key
         for c in inspect(Dictionary).columns
@@ -88,75 +88,73 @@ def normal_to_all_lower() -> None:
 if __name__ == "__main__":
     init_db()  # создать таблицы
 
-# normal_to_all_lower()
 
+    print("""Переключение режимов работы:
+    s - выполнить перевод c английского на русский
+    sr - выполнить перевод c русского на английский
+    a - добавить новый перевод
+    u - редактировать перевод
+    d - удалить перевод
+    q - выход из программы""")
 
-# print("""Переключение режимов работы:
-# s - выполнить перевод c английского на русский
-# sr - выполнить перевод c русского на английский
-# a - добавить новый перевод
-# u - редактировать перевод
-# d - удалить перевод
-# q - выход из программы""")
+    var = "s"
+    while var != "q":
+        match var:
+            case "s":
+                while True:
+                    print("================================")
+                    print("Перевод с английского на русский")
+                    var = input("Введите слово: ").strip()
+                    if var in ("sr", "a", "u", "d", "q"):
+                        break
 
-# var = "s"
-# while var != "q":
-# match var:
-# case "s":
-# while True:
-# print("================================")
-# print("Перевод с английского на русский")
-# var = input("Введите слово: ").strip()
-# if var in ("sr", "a", "u", "d", "q"):
-# break
+                    # Получить переводы с английского на русский
+                    result = get_translate_en_to_ru(var)
 
-# # Получить переводы с английского на русский
-# result = get_translate_en_to_ru(var)
+                    if not result:
+                        print("Слово не найдено")
+                        continue
+                    else:
+                        for i, v in enumerate(result):
+                            print_translate(str(i + 1), v)
+            case "sr":
+                while True:
+                    print("================================")
+                    print("Перевод с русского на английский")
+                    var = input("Введите слово: ").strip()
+                    if var in ("s", "a", "u", "d", "q"):
+                        break
 
-# if not result:
-# print("Слово не найдено")
-# continue
-# else:
-# for i, v in enumerate(result):
-# print_translate(str(i + 1), v)
-# case "sr":
-# while True:
-# print("================================")
-# print("Перевод с русского на английский")
-# var = input("Введите слово: ").strip()
-# if var in ("s", "a", "u", "d", "q"):
-# break
+                    # Получить переводы с русского на английский
+                    result = get_translate_ru_to_en(var)
 
-# # Получить переводы с русского на английский
-# result = get_translate_ru_to_en(var)
+                    if not result:
+                        print("Слово не найдено")
+                        continue
+                    else:
+                        for i, v in enumerate(result):
+                            print_translate(str(i + 1), v)
+            case "a":
+                while True:
+                    var = input()
+                    if var in ("sr", "s", "u", "d", "q"):
+                        break
+                    print("a - пусто")
+            case "u":
+                while True:
+                    var = input()
+                    if var in ("sr", "s", "a", "d", "q"):
+                        break
+                    print("u - пусто")
+            case "d":
+                while True:
+                    var = input()
+                    if var in ("sr", "s", "a", "u", "q"):
+                        break
+                    print("d - пусто")
 
-# if not result:
-# print("Слово не найдено")
-# continue
-# else:
-# for i, v in enumerate(result):
-# print_translate(str(i + 1), v)
-# case "a":
-# while True:
-# var = input()
-# if var in ("sr", "s", "u", "d", "q"):
-# break
-# print("a - пусто")
-# case "u":
-# while True:
-# var = input()
-# if var in ("sr", "s", "a", "d", "q"):
-# break
-# print("u - пусто")
-# case "d":
-# while True:
-# var = input()
-# if var in ("sr", "s", "a", "u", "q"):
-# break
-# print("d - пусто")
-
-# # Выход из программы
-# table = Table(title="")
-# table.add_column("Выход из программы", justify="center")
-# table.add_row("До встречи 🤚")
-# Console().print(table)
+    # Выход из программы
+    table = Table(title="")
+    table.add_column("Выход из программы", justify="center")
+    table.add_row("До встречи 🤚")
+    Console().print(table)
