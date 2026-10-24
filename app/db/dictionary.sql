@@ -14,4 +14,5 @@ INSERT INTO translates VALUES(1,'hello','привет',NULL,NULL,NULL);
 INSERT INTO translates VALUES(2,'goodbye','пока',NULL,NULL,NULL);
 INSERT INTO translates VALUES(3,'hi','привет',NULL,NULL,NULL);
 INSERT INTO translates VALUES(4,'bye','пока',NULL,NULL,NULL);
+INSERT INTO translates VALUES(5,'dick','член',NULL,NULL,NULL);
 COMMIT;
