@@ -8,14 +8,15 @@ from sqlalchemy import String, inspect, select
 from sqlalchemy.orm import Session
 
 
-def add_translate(word: str, value: str):
+def add_translate(**kwargs) -> None:
     """Добавить перeвод в базу данных"""
+    kwargs2 = {k.lower(): v for k, v in kwargs.items() if v}
     with Session(engine) as session:
-        session.add(Dictionary(word=word, value=value))
+        session.add(Dictionary(**kwargs2))
         session.commit()
 
 
-def add_translate_dict(translates: dict):
+def add_translate_dict(translates: dict) -> None:
     """Добавить переводы в базу данных"""
     with Session(engine) as session:
         dict_list = [Dictionary(word=w, value=v) for w, v in translates.items()]
@@ -88,7 +89,6 @@ def normal_to_all_lower() -> None:
 if __name__ == "__main__":
     init_db()  # создать таблицы
 
-
     print("""Переключение режимов работы:
     s - выполнить перевод c английского на русский
     sr - выполнить перевод c русского на английский
@@ -136,10 +136,24 @@ if __name__ == "__main__":
                             print_translate(str(i + 1), v)
             case "a":
                 while True:
-                    var = input()
+                    print("================================")
+                    print("Добавить перевод")
+                    var = input("Введите слово: ").strip()
                     if var in ("sr", "s", "u", "d", "q"):
                         break
-                    print("a - пусто")
+                    value = input("Введите перевод: ").strip()
+                    context_en = (
+                        input("Введите контекст на английском: ").strip().lower()
+                    )
+                    context_ru = input("Введите контекст на русском: ").strip().lower()
+                    comment = input("Введите комментарий: ").strip().lower()
+                    add_translate(
+                        word=var,
+                        value=value,
+                        context_en=context_en,
+                        context_ru=context_ru,
+                        comment=comment,
+                    )
             case "u":
                 while True:
                     var = input()
