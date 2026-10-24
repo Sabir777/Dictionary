@@ -88,7 +88,7 @@ def normal_to_all_lower() -> None:
 if __name__ == "__main__":
     init_db()  # создать таблицы
 
-normal_to_all_lower()
+# normal_to_all_lower()
 
 
 # print("""Переключение режимов работы:
