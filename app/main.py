@@ -68,18 +68,19 @@ def print_translate(title: str, v: Dictionary) -> None:
     print()
     Console().print(table)
 
-def all_lower() -> None:
+def normal_to_all_lower() -> None:
+    """Нормализация: перевод значений всех полей базы данных в нижний регистр"""
     with Session(engine) as session:
         result = session.scalars(select(Dictionary)).all()
         for v in result:
             print(v.__dict__)
-            print(v)
 
 
 if __name__ == "__main__":
     init_db()  # создать таблицы
 
-all_lower()
+normal_to_all_lower()
+
 
     # print("""Переключение режимов работы:
     # s - выполнить перевод c английского на русский
