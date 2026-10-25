@@ -1,3 +1,5 @@
 /sql_venv/*
 **/__pycache__/*
 **/*.db
+**/*.sql
+!/app/db/dictionary.sql
