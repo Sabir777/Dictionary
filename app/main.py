@@ -89,86 +89,86 @@ def print_translate(title: str, v: Dictionary) -> None:
 if __name__ == "__main__":
     init_db()  # создать таблицы
 
-    print("""Переключение режимов работы:
-    s - выполнить перевод c английского на русский
-    sr - выполнить перевод c русского на английский
-    a - добавить новый перевод
-    u - редактировать перевод
-    d - удалить перевод
-    q - выход из программы""")
+    # print("""Переключение режимов работы:
+    # s - выполнить перевод c английского на русский
+    # sr - выполнить перевод c русского на английский
+    # a - добавить новый перевод
+    # u - редактировать перевод
+    # d - удалить перевод
+    # q - выход из программы""")
 
-    var = "s"
-    while var != "q":
-        match var:
-            case "s":
-                while True:
-                    print("================================")
-                    print("Перевод с английского на русский")
-                    var = input("Введите слово: ").strip()
-                    if var in ("sr", "a", "u", "d", "q"):
-                        break
+    # var = "s"
+    # while var != "q":
+    #     match var:
+    #         case "s":
+    #             while True:
+    #                 print("================================")
+    #                 print("Перевод с английского на русский")
+    #                 var = input("Введите слово: ").strip()
+    #                 if var in ("sr", "a", "u", "d", "q"):
+    #                     break
 
-                    # Получить переводы с английского на русский
-                    result = get_translate_en_to_ru(var)
+    #                 # Получить переводы с английского на русский
+    #                 result = get_translate_en_to_ru(var)
 
-                    if not result:
-                        print("Слово не найдено")
-                        continue
-                    else:
-                        for i, v in enumerate(result):
-                            print_translate(str(i + 1), v)
-            case "sr":
-                while True:
-                    print("================================")
-                    print("Перевод с русского на английский")
-                    var = input("Введите слово: ").strip()
-                    if var in ("s", "a", "u", "d", "q"):
-                        break
+    #                 if not result:
+    #                     print("Слово не найдено")
+    #                     continue
+    #                 else:
+    #                     for i, v in enumerate(result):
+    #                         print_translate(str(i + 1), v)
+    #         case "sr":
+    #             while True:
+    #                 print("================================")
+    #                 print("Перевод с русского на английский")
+    #                 var = input("Введите слово: ").strip()
+    #                 if var in ("s", "a", "u", "d", "q"):
+    #                     break
 
-                    # Получить переводы с русского на английский
-                    result = get_translate_ru_to_en(var)
+    #                 # Получить переводы с русского на английский
+    #                 result = get_translate_ru_to_en(var)
 
-                    if not result:
-                        print("Слово не найдено")
-                        continue
-                    else:
-                        for i, v in enumerate(result):
-                            print_translate(str(i + 1), v)
-            case "a":
-                while True:
-                    print("================================")
-                    print("Добавить перевод")
-                    var = input("Введите слово: ").strip()
-                    if var in ("sr", "s", "u", "d", "q"):
-                        break
-                    value = input("Введите перевод: ").strip()
-                    context_en = (
-                        input("Введите контекст на английском: ").strip().lower()
-                    )
-                    context_ru = input("Введите контекст на русском: ").strip().lower()
-                    comment = input("Введите комментарий: ").strip().lower()
-                    add_translate(
-                        word=var,
-                        value=value,
-                        context_en=context_en,
-                        context_ru=context_ru,
-                        comment=comment,
-                    )
-            case "u":
-                while True:
-                    var = input()
-                    if var in ("sr", "s", "a", "d", "q"):
-                        break
-                    print("u - пусто")
-            case "d":
-                while True:
-                    var = input()
-                    if var in ("sr", "s", "a", "u", "q"):
-                        break
-                    print("d - пусто")
+    #                 if not result:
+    #                     print("Слово не найдено")
+    #                     continue
+    #                 else:
+    #                     for i, v in enumerate(result):
+    #                         print_translate(str(i + 1), v)
+    #         case "a":
+    #             while True:
+    #                 print("================================")
+    #                 print("Добавить перевод")
+    #                 var = input("Введите слово: ").strip()
+    #                 if var in ("sr", "s", "u", "d", "q"):
+    #                     break
+    #                 value = input("Введите перевод: ").strip()
+    #                 context_en = (
+    #                     input("Введите контекст на английском: ").strip().lower()
+    #                 )
+    #                 context_ru = input("Введите контекст на русском: ").strip().lower()
+    #                 comment = input("Введите комментарий: ").strip().lower()
+    #                 add_translate(
+    #                     word=var,
+    #                     value=value,
+    #                     context_en=context_en,
+    #                     context_ru=context_ru,
+    #                     comment=comment,
+    #                 )
+    #         case "u":
+    #             while True:
+    #                 var = input()
+    #                 if var in ("sr", "s", "a", "d", "q"):
+    #                     break
+    #                 print("u - пусто")
+    #         case "d":
+    #             while True:
+    #                 var = input()
+    #                 if var in ("sr", "s", "a", "u", "q"):
+    #                     break
+    #                 print("d - пусто")
 
-    # Выход из программы
-    table = Table(title="")
-    table.add_column("Выход из программы", justify="center")
-    table.add_row("До встречи 🤚")
-    Console().print(table)
+    # # Выход из программы
+    # table = Table(title="")
+    # table.add_column("Выход из программы", justify="center")
+    # table.add_row("До встречи 🤚")
+    # Console().print(table)
