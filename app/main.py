@@ -4,7 +4,7 @@ from db import engine, init_db
 from models import Context, Dictionary  # noqa: F401
 from rich.console import Console
 from rich.table import Table
-from sqlalchemy import String, inspect, select  # noqa: F401
+from sqlalchemy import String, inspect, select, Row  # noqa: F401
 from sqlalchemy.orm import Session
 
 
@@ -25,29 +25,63 @@ def add_translate_dict(translates: dict) -> None:
 
 
 def get_translate_en_to_ru(_word: str):
-    """Получить перевод с английского на русский"""
+    """Получить перевод с английского на русский (outer join с contexts).
+
+    Возвращает строки как будто из одной «плоской» таблицы с полями:
+    id, word, value, context_en, context_ru, comment.
+    Если у перевода нет контекста, context_en/context_ru будут NULL (outer join).
+    """
     with Session(engine) as session:
-        return session.scalars(
-            select(Dictionary).where(Dictionary.word.ilike(f"%{_word}%"))
-        ).all()
+        stmt = (
+            select(
+                Dictionary.id,
+                Dictionary.word,
+                Dictionary.value,
+                Context.context_en,
+                Context.context_ru,
+                Dictionary.comment,
+            )
+            .outerjoin(Context, Dictionary.context)
+            .where(Dictionary.word.ilike(f"%{_word}%"))
+        )
+        return session.execute(stmt).all()
 
 
 def get_translate_ru_to_en(_word: str):
-    """Получить перевод c русского на английский"""
+    """Получить перевод c русского на английский (outer join с contexts).
+
+    Возвращает строки как будто из одной «плоской» таблицы с полями:
+    id, word, value, context_en, context_ru, comment.
+    Если у перевода нет контекста, context_en/context_ru будут NULL (outer join).
+    """
     with Session(engine) as session:
-        return session.scalars(
-            select(Dictionary).where(Dictionary.value.ilike(f"%{_word}%"))
-        ).all()
+        stmt = (
+            select(
+                Dictionary.id,
+                Dictionary.word,
+                Dictionary.value,
+                Context.context_en,
+                Context.context_ru,
+                Dictionary.comment,
+            )
+            .outerjoin(Context, Dictionary.context)
+            .where(Dictionary.value.ilike(f"%{_word}%"))
+        )
+        return session.execute(stmt).all()
 
 
-def print_translate(title: str, v: Dictionary) -> None:
-    """Напечатать перевод"""
+def print_translate(title: str, v: Row) -> None:
+    """Напечатать перевод.
+
+    `v` — строка-результат запроса с outer join: поля
+    id, word, value, context_en, context_ru, comment.
+    """
 
     H = "bold white on blue"
     H1 = "bold white on yellow"
     H2 = "bold white on magenta"
-    # H3 = "bold white on green"
-    # H4 = "bold white on cyan"
+    H3 = "bold white on green"
+    H4 = "bold white on cyan"
     H5 = "bold white on bright_black"
 
     table = Table(title=title, show_lines=True, header_style=H)
@@ -57,12 +91,12 @@ def print_translate(title: str, v: Dictionary) -> None:
     table.add_row(v.word)
     table.add_row("Перевод", style=H2)
     table.add_row(v.value)
-    # if v.context_en:
-    #     table.add_row("Context", style=H3)
-    #     table.add_row(v.context_en)
-    # if v.context_ru:
-    #     table.add_row("Контекст", style=H4)
-    #     table.add_row(v.context_ru)
+    if v.context_en:
+        table.add_row("Context", style=H3)
+        table.add_row(v.context_en)
+    if v.context_ru:
+        table.add_row("Контекст", style=H4)
+        table.add_row(v.context_ru)
     if v.comment:
         table.add_row("Комментарий", style=H5)
         table.add_row(v.comment)
@@ -89,86 +123,86 @@ def print_translate(title: str, v: Dictionary) -> None:
 if __name__ == "__main__":
     init_db()  # создать таблицы
 
-    # print("""Переключение режимов работы:
-    # s - выполнить перевод c английского на русский
-    # sr - выполнить перевод c русского на английский
-    # a - добавить новый перевод
-    # u - редактировать перевод
-    # d - удалить перевод
-    # q - выход из программы""")
+    print("""Переключение режимов работы:
+    s - выполнить перевод c английского на русский
+    sr - выполнить перевод c русского на английский
+    a - добавить новый перевод
+    u - редактировать перевод
+    d - удалить перевод
+    q - выход из программы""")
 
-    # var = "s"
-    # while var != "q":
-    #     match var:
-    #         case "s":
-    #             while True:
-    #                 print("================================")
-    #                 print("Перевод с английского на русский")
-    #                 var = input("Введите слово: ").strip()
-    #                 if var in ("sr", "a", "u", "d", "q"):
-    #                     break
+    var = "s"
+    while var != "q":
+        match var:
+            case "s":
+                while True:
+                    print("================================")
+                    print("Перевод с английского на русский")
+                    var = input("Введите слово: ").strip()
+                    if var in ("sr", "a", "u", "d", "q"):
+                        break
 
-    #                 # Получить переводы с английского на русский
-    #                 result = get_translate_en_to_ru(var)
+                    # Получить переводы с английского на русский
+                    result = get_translate_en_to_ru(var)
 
-    #                 if not result:
-    #                     print("Слово не найдено")
-    #                     continue
-    #                 else:
-    #                     for i, v in enumerate(result):
-    #                         print_translate(str(i + 1), v)
-    #         case "sr":
-    #             while True:
-    #                 print("================================")
-    #                 print("Перевод с русского на английский")
-    #                 var = input("Введите слово: ").strip()
-    #                 if var in ("s", "a", "u", "d", "q"):
-    #                     break
+                    if not result:
+                        print("Слово не найдено")
+                        continue
+                    else:
+                        for i, v in enumerate(result):
+                            print_translate(str(i + 1), v)
+            case "sr":
+                while True:
+                    print("================================")
+                    print("Перевод с русского на английский")
+                    var = input("Введите слово: ").strip()
+                    if var in ("s", "a", "u", "d", "q"):
+                        break
 
-    #                 # Получить переводы с русского на английский
-    #                 result = get_translate_ru_to_en(var)
+                    # Получить переводы с русского на английский
+                    result = get_translate_ru_to_en(var)
 
-    #                 if not result:
-    #                     print("Слово не найдено")
-    #                     continue
-    #                 else:
-    #                     for i, v in enumerate(result):
-    #                         print_translate(str(i + 1), v)
-    #         case "a":
-    #             while True:
-    #                 print("================================")
-    #                 print("Добавить перевод")
-    #                 var = input("Введите слово: ").strip()
-    #                 if var in ("sr", "s", "u", "d", "q"):
-    #                     break
-    #                 value = input("Введите перевод: ").strip()
-    #                 context_en = (
-    #                     input("Введите контекст на английском: ").strip().lower()
-    #                 )
-    #                 context_ru = input("Введите контекст на русском: ").strip().lower()
-    #                 comment = input("Введите комментарий: ").strip().lower()
-    #                 add_translate(
-    #                     word=var,
-    #                     value=value,
-    #                     context_en=context_en,
-    #                     context_ru=context_ru,
-    #                     comment=comment,
-    #                 )
-    #         case "u":
-    #             while True:
-    #                 var = input()
-    #                 if var in ("sr", "s", "a", "d", "q"):
-    #                     break
-    #                 print("u - пусто")
-    #         case "d":
-    #             while True:
-    #                 var = input()
-    #                 if var in ("sr", "s", "a", "u", "q"):
-    #                     break
-    #                 print("d - пусто")
+                    if not result:
+                        print("Слово не найдено")
+                        continue
+                    else:
+                        for i, v in enumerate(result):
+                            print_translate(str(i + 1), v)
+            case "a":
+                while True:
+                    print("================================")
+                    print("Добавить перевод")
+                    var = input("Введите слово: ").strip()
+                    if var in ("sr", "s", "u", "d", "q"):
+                        break
+                    value = input("Введите перевод: ").strip()
+                    context_en = (
+                        input("Введите контекст на английском: ").strip().lower()
+                    )
+                    context_ru = input("Введите контекст на русском: ").strip().lower()
+                    comment = input("Введите комментарий: ").strip().lower()
+                    add_translate(
+                        word=var,
+                        value=value,
+                        context_en=context_en,
+                        context_ru=context_ru,
+                        comment=comment,
+                    )
+            case "u":
+                while True:
+                    var = input()
+                    if var in ("sr", "s", "a", "d", "q"):
+                        break
+                    print("u - пусто")
+            case "d":
+                while True:
+                    var = input()
+                    if var in ("sr", "s", "a", "u", "q"):
+                        break
+                    print("d - пусто")
 
-    # # Выход из программы
-    # table = Table(title="")
-    # table.add_column("Выход из программы", justify="center")
-    # table.add_row("До встречи 🤚")
-    # Console().print(table)
+    # Выход из программы
+    table = Table(title="")
+    table.add_column("Выход из программы", justify="center")
+    table.add_row("До встречи 🤚")
+    Console().print(table)

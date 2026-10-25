@@ -30,7 +30,7 @@ class Dictionary(Base):
 
     context_id: Mapped[int] = mapped_column(ForeignKey("contexts.id"), nullable=True)
 
-    context: Mapped["Dictionary"] = relationship(back_populates="translations")
+    context: Mapped["Context"] = relationship(back_populates="translations")
 
     __table_args__ = (
         UniqueConstraint("word", "value", name="uq_translates_word_value"),
