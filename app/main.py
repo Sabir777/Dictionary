@@ -1,10 +1,10 @@
 import readline  # noqa: F401
 
 from db import engine, init_db
-from models import Dictionary, Context
+from models import Context, Dictionary  # noqa: F401
 from rich.console import Console
 from rich.table import Table
-from sqlalchemy import String, inspect, select
+from sqlalchemy import String, inspect, select  # noqa: F401
 from sqlalchemy.orm import Session
 
 
@@ -46,8 +46,8 @@ def print_translate(title: str, v: Dictionary) -> None:
     H = "bold white on blue"
     H1 = "bold white on yellow"
     H2 = "bold white on magenta"
-    H3 = "bold white on green"
-    H4 = "bold white on cyan"
+    # H3 = "bold white on green"
+    # H4 = "bold white on cyan"
     H5 = "bold white on bright_black"
 
     table = Table(title=title, show_lines=True, header_style=H)
@@ -70,20 +70,20 @@ def print_translate(title: str, v: Dictionary) -> None:
     Console().print(table)
 
 
-def normal_to_all_lower() -> None:
-    """Нормализация: перевод всех строковых полей в нижний регистр"""
-    str_cols = [
-        c.key
-        for c in inspect(Dictionary).columns
-        if isinstance(c.type, String) and not c.primary_key
-    ]
-    with Session(engine) as session:
-        for row in session.scalars(select(Dictionary)):
-            for name in str_cols:
-                value = getattr(row, name)
-                if value is not None:
-                    setattr(row, name, value.lower())
-        session.commit()
+# def normal_to_all_lower() -> None:
+#     """Нормализация: перевод всех строковых полей в нижний регистр"""
+#     str_cols = [
+#         c.key
+#         for c in inspect(Dictionary).columns
+#         if isinstance(c.type, String) and not c.primary_key
+#     ]
+#     with Session(engine) as session:
+#         for row in session.scalars(select(Dictionary)):
+#             for name in str_cols:
+#                 value = getattr(row, name)
+#                 if value is not None:
+#                     setattr(row, name, value.lower())
+#         session.commit()
 
 
 if __name__ == "__main__":
