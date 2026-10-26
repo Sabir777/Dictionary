@@ -1,10 +1,10 @@
 import readline  # noqa: F401
 
 from db import engine, init_db
-from models import Context, Dictionary  # noqa: F401
+from models import Context, Dictionary
 from rich.console import Console
 from rich.table import Table
-from sqlalchemy import String, inspect, select, Row  # noqa: F401
+from sqlalchemy import Row, String, inspect, select  # noqa: F401
 from sqlalchemy.orm import Session
 
 
@@ -176,17 +176,14 @@ if __name__ == "__main__":
                     if var in ("sr", "s", "u", "d", "q"):
                         break
                     value = input("Введите перевод: ").strip()
-                    context_en = (
-                        input("Введите контекст на английском: ").strip().lower()
-                    )
-                    context_ru = input("Введите контекст на русском: ").strip().lower()
+                    context = input("Введите ID контекста: ")
+                    context = int(context) if context.isdigit() else None
                     comment = input("Введите комментарий: ").strip().lower()
                     add_translate(
                         word=var,
                         value=value,
-                        context_en=context_en,
-                        context_ru=context_ru,
-                        comment=comment,
+                        context=context,
+                        comment=comment
                     )
             case "u":
                 while True:
