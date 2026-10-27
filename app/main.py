@@ -15,13 +15,18 @@ def add_translate(**kwargs) -> None:
         session.add(Dictionary(**kwargs2))
         session.commit()
 
-
-def add_translate_dict(translates: dict) -> None:
-    """Добавить переводы в базу данных"""
+def add_context(context_en, context_ru) -> None:
+    """Добавить контекст в базу данных"""
     with Session(engine) as session:
-        dict_list = [Dictionary(word=w, value=v) for w, v in translates.items()]
-        session.add_all(dict_list)
+        session.add(Context(context_en=context_en, context_ru=context_ru))
         session.commit()
+
+# def add_translate_dict(translates: dict) -> None:
+#     """Добавить переводы в базу данных"""
+#     with Session(engine) as session:
+#         dict_list = [Dictionary(word=w, value=v) for w, v in translates.items()]
+#         session.add_all(dict_list)
+#         session.commit()
 
 
 def get_translate_en_to_ru(_word: str):
@@ -69,6 +74,12 @@ def get_translate_ru_to_en(_word: str):
         )
         return session.execute(stmt).all()
 
+def get_context(_word: str):
+    """Получить один или несколько контекстов по ключевому слову"""
+    with Session(engine) as session:
+        return session.scalars(
+            select(Context).where(Context.context_en.ilike(f"%{_word}%"))
+        ).all()
 
 def print_translate(title: str, v: Row) -> None:
     """Напечатать перевод.
@@ -103,6 +114,22 @@ def print_translate(title: str, v: Row) -> None:
     print()
     Console().print(table)
 
+def print_context(title: str, v: Context) -> None:
+    """Напечатать контекст"""
+
+    H = "bold white on blue"
+    H1 = "bold white on yellow"
+    H2 = "bold white on magenta"
+
+    table = Table(title=title, show_lines=True, header_style=H)
+    table.add_column("ID", justify="center")
+    table.add_row(str(v.id))
+    table.add_row("Context: en", style=H1)
+    table.add_row(v.context_en)
+    table.add_row("Context: ru", style=H2)
+    table.add_row(v.context_ru)
+    print()
+    Console().print(table)
 
 # def normal_to_all_lower() -> None:
 #     """Нормализация: перевод всех строковых полей в нижний регистр"""
@@ -126,9 +153,13 @@ if __name__ == "__main__":
     print("""Переключение режимов работы:
     s - выполнить перевод c английского на русский
     sr - выполнить перевод c русского на английский
+    sc - показать один или несколько контекстов по ключевому слову
     a - добавить новый перевод
+    ac - добавить новый контекст
     u - редактировать перевод
+    uc - редактировать контекст
     d - удалить перевод
+    dc - удалить контекст
     q - выход из программы""")
 
     var = "s"
@@ -139,7 +170,7 @@ if __name__ == "__main__":
                     print("================================")
                     print("Перевод с английского на русский")
                     var = input("Введите слово: ").strip()
-                    if var in ("sr", "a", "u", "d", "q"):
+                    if var in ("sr", "a", "u", "d", "q", "ac", "uc", "sc", "dc"):
                         break
 
                     # Получить переводы с английского на русский
@@ -156,7 +187,7 @@ if __name__ == "__main__":
                     print("================================")
                     print("Перевод с русского на английский")
                     var = input("Введите слово: ").strip()
-                    if var in ("s", "a", "u", "d", "q"):
+                    if var in ("s", "a", "u", "d", "q", "ac", "uc", "sc", "dc"):
                         break
 
                     # Получить переводы с русского на английский
@@ -168,12 +199,29 @@ if __name__ == "__main__":
                     else:
                         for i, v in enumerate(result):
                             print_translate(str(i + 1), v)
+            case "sc":
+                while True:
+                    print("================================")
+                    print("Получить контексты по ключевому слову")
+                    var = input("Введите слово: ").strip()
+                    if var in ("s", "a", "u", "d", "q", "ac", "uc", "sr", "dc"):
+                        break
+
+                    # Получить контексты
+                    result = get_context(var)
+
+                    if not result:
+                        print("Слово не найдено")
+                        continue
+                    else:
+                        for i, v in enumerate(result):
+                            print_context(str(i + 1), v)
             case "a":
                 while True:
                     print("================================")
                     print("Добавить перевод")
                     var = input("Введите слово: ").strip()
-                    if var in ("sr", "s", "u", "d", "q"):
+                    if var in ("sr", "s", "u", "d", "q", "ac", "uc", "sc", "dc"):
                         break
                     value = input("Введите перевод: ").strip()
                     context = input("Введите ID контекста: ")
@@ -185,16 +233,38 @@ if __name__ == "__main__":
                         context=context,
                         comment=comment
                     )
+            case "ac":
+                while True:
+                    print("================================")
+                    print("Добавить контекст")
+                    var = input("Введите контекст: ").strip()
+                    if var in ("sr", "s", "u", "d", "q", "a", "uc", "sc", "dc"):
+                        break
+                    value = input("Введите перевод контекста: ").strip()
+                    if var and value:
+                        add_context(context_en=var, context_ru=value)
             case "u":
                 while True:
                     var = input()
-                    if var in ("sr", "s", "a", "d", "q"):
+                    if var in ("sr", "s", "a", "d", "q", "ac", "uc", "sc", "dc"):
+                        break
+                    print("u - пусто")
+            case "uc":
+                while True:
+                    var = input()
+                    if var in ("sr", "s", "a", "d", "q", "ac", "u", "sc", "dc"):
                         break
                     print("u - пусто")
             case "d":
                 while True:
                     var = input()
-                    if var in ("sr", "s", "a", "u", "q"):
+                    if var in ("sr", "s", "a", "u", "q", "ac", "uc", "sc", "dc"):
+                        break
+                    print("d - пусто")
+            case "dс":
+                while True:
+                    var = input()
+                    if var in ("sr", "s", "a", "u", "q", "ac", "uc", "sc", "d"):
                         break
                     print("d - пусто")
 

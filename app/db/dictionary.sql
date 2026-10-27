@@ -8,6 +8,8 @@ CREATE TABLE contexts (
 	CONSTRAINT uq_contexts_en_ru UNIQUE (context_en, context_ru)
 );
 INSERT INTO contexts VALUES(1,'You are given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.','Вам дан массив целых чисел nums и целое число target, верните индексы двух чисел так, чтобы их сумма была равна target.');
+INSERT INTO contexts VALUES(2,'You may assume that each input would have exactly one solution, and you may not use the same element twice.','Вы можете предположить, что у каждого входного значения будет ровно одно решение, и вы не можете использовать');
+INSERT INTO contexts VALUES(3,'','q');
 CREATE TABLE translations (
 	id INTEGER NOT NULL, 
 	word TEXT NOT NULL, 
