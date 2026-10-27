@@ -4,7 +4,7 @@ from db import engine, init_db
 from models import Context, Dictionary
 from rich.console import Console
 from rich.table import Table
-from sqlalchemy import Row, String, inspect, select  # noqa: F401
+from sqlalchemy import Row, String, inspect, select, delete  # noqa: F401
 from sqlalchemy.orm import Session
 
 
@@ -130,6 +130,13 @@ def print_context(title: str, v: Context) -> None:
     table.add_row(v.context_ru)
     print()
     Console().print(table)
+
+def del_context(_id: int):
+    """Удалить контекст по его ID"""
+    with Session(engine) as session:
+        
+        # is_action = ("y" == input("Вы хотит))
+        session.execute(delete(Context).where(Context.id == _id))
 
 # def normal_to_all_lower() -> None:
 #     """Нормализация: перевод всех строковых полей в нижний регистр"""
