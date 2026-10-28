@@ -6,6 +6,12 @@ from rich.console import Console
 from rich.table import Table
 from sqlalchemy import Row, String, inspect, select, func  # noqa: F401
 from sqlalchemy.orm import Session
+import subprocess
+
+
+def copy_to_clipboard(text: str) -> None:
+    """Копировать текст в глобальный буфер"""
+    subprocess.run(["clip.exe"], input=text.encode("utf-16"), check=True)
 
 
 def menu():
@@ -113,11 +119,7 @@ def counter_ref(_id: int) -> int:
 
 
 def print_translate(title: str, v: Row) -> None:
-    """Напечатать перевод.
-
-    `v` — строка-результат запроса с outer join: поля
-    id, word, value, context_en, context_ru, comment.
-    """
+    """Напечатать перевод"""
 
     H = "bold white on blue"
     H1 = "bold white on yellow"
@@ -181,6 +183,38 @@ def del_context(_id: int):
             ):
                 session.delete(context)
                 session.commit()
+
+
+def update_context(_id: int):
+    """Редактировать контекст"""
+    with Session(engine) as session:
+        context = session.get(Context, _id)
+        if not context:
+            print("Контекст с таким ID не существует")
+        else:
+            print_context(context)
+
+            # Редактирую Context: en
+            old_value = context.context_en
+            copy_to_clipboard(old_value)
+            print('"Context: en"\nСтарое значение для поля находится в буфере обмена.')
+            print("Если просто нажать Enter, значение поля не изменится ✅")
+            new_val = input("Вы можете вставить его и потом отредактировать:\n").strip()
+            if new_val and (old_value != new_val):
+                context.context_en = new_val
+            
+
+            # Редактирую Context: ru
+            old_value = context.context_ru
+            copy_to_clipboard(old_value)
+            print("================================")
+            print('"Context: ru"\nСтарое значение для поля находится в буфере обмена.')
+            print("Если просто нажать Enter, значение поля не изменится ✅")
+            new_val = input("Вы можете вставить его и потом отредактировать:\n").strip()
+            if new_val and (old_value != new_val):
+                context.context_ru = new_val
+
+            session.commit()
 
 
 # def normal_to_all_lower() -> None:
@@ -391,7 +425,9 @@ if __name__ == "__main__":
                     print("u - пусто")
             case "uc":
                 while True:
-                    var = input()
+                    print("================================")
+                    print("Редактировать контекст")
+                    var = input("Введите ID контекста: ").strip()
                     if var in (
                         "sr",
                         "s",
@@ -406,7 +442,8 @@ if __name__ == "__main__":
                         "ci",
                     ):
                         break
-                    print("u - пусто")
+                    update_context(int(var))
+
             case "d":
                 while True:
                     var = input()
