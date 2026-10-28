@@ -270,12 +270,17 @@ if __name__ == "__main__":
                     if var in ("sr", "s", "a", "u", "q", "ac", "uc", "sc", "dc"):
                         break
                     print("d - пусто")
-            case "dс":
+            case "dc":
                 while True:
+                    print("================================")
+                    print("Удалить контекст")
                     var = input("Введите ID удаляемой строки контекста: ")
                     if var in ("sr", "s", "a", "u", "q", "ac", "uc", "sc", "d"):
                         break
-                    print("d - пусто")
+                    del_context(int(var))
+            case _:
+                print("Недопустимое состояние: выход")
+                break
 
     # Выход из программы
     table = Table(title="")
