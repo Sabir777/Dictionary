@@ -4,7 +4,7 @@ from db import engine, init_db
 from models import Context, Dictionary
 from rich.console import Console
 from rich.table import Table
-from sqlalchemy import Row, String, inspect, select, delete  # noqa: F401
+from sqlalchemy import Row, String, inspect, select, func  # noqa: F401
 from sqlalchemy.orm import Session
 
 
@@ -81,6 +81,18 @@ def get_context(_word: str):
             select(Context).where(Context.context_en.ilike(f"%{_word}%"))
         ).all()
 
+
+def counter_ref(_id: int) -> int:
+    """Сколько записей в translations ссылаются на контекст с данным id"""
+    with Session(engine) as session:
+        stmt = (
+            select(func.count())
+            .select_from(Dictionary)
+            .where(Dictionary.context_id == _id)
+        )
+        return session.scalar(stmt) or 0
+
+
 def print_translate(title: str, v: Row) -> None:
     """Напечатать перевод.
 
@@ -120,6 +132,7 @@ def print_context(v: Context, title: str | None = None) -> None:
     H = "bold white on blue"
     H1 = "bold white on yellow"
     H2 = "bold white on magenta"
+    H3 = "bold white on green"
 
     table = Table(title=title, show_lines=True, header_style=H)
     table.add_column("ID", justify="center")
@@ -128,6 +141,8 @@ def print_context(v: Context, title: str | None = None) -> None:
     table.add_row(v.context_en)
     table.add_row("Context: ru", style=H2)
     table.add_row(v.context_ru)
+    table.add_row("Количество ссылок на данный контекст", style=H3)
+    table.add_row(str(counter_ref(int(v.id))))
     print()
     Console().print(table)
 
