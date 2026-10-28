@@ -114,7 +114,7 @@ def print_translate(title: str, v: Row) -> None:
     print()
     Console().print(table)
 
-def print_context(title: str, v: Context) -> None:
+def print_context(v: Context, title: str | None = None) -> None:
     """Напечатать контекст"""
 
     H = "bold white on blue"
@@ -134,9 +134,11 @@ def print_context(title: str, v: Context) -> None:
 def del_context(_id: int):
     """Удалить контекст по его ID"""
     with Session(engine) as session:
-        
+        stmt = select(Context).where(Context.id == _id)
+        context = session.scalars(stmt).one()
+        print_context(context)
         # is_action = ("y" == input("Вы хотит))
-        session.execute(delete(Context).where(Context.id == _id))
+        # session.execute(delete(Context).where(Context.id == _id))
 
 # def normal_to_all_lower() -> None:
 #     """Нормализация: перевод всех строковых полей в нижний регистр"""
@@ -222,7 +224,7 @@ if __name__ == "__main__":
                         continue
                     else:
                         for i, v in enumerate(result):
-                            print_context(str(i + 1), v)
+                            print_context(v, str(i + 1))
             case "a":
                 while True:
                     print("================================")
@@ -270,7 +272,7 @@ if __name__ == "__main__":
                     print("d - пусто")
             case "dс":
                 while True:
-                    var = input()
+                    var = input("Введите ID удаляемой строки контекста: ")
                     if var in ("sr", "s", "a", "u", "q", "ac", "uc", "sc", "d"):
                         break
                     print("d - пусто")
