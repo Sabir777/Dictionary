@@ -137,8 +137,9 @@ def del_context(_id: int):
         stmt = select(Context).where(Context.id == _id)
         context = session.scalars(stmt).one()
         print_context(context)
-        # is_action = ("y" == input("Вы хотит))
-        # session.execute(delete(Context).where(Context.id == _id))
+        if input('Подтвердите удаление контекста - введите "yes": ').strip() == "yes":
+            session.delete(context)
+            session.commit()
 
 # def normal_to_all_lower() -> None:
 #     """Нормализация: перевод всех строковых полей в нижний регистр"""
