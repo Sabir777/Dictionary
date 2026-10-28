@@ -94,10 +94,12 @@ def get_context(_word: str):
             select(Context).where(Context.context_en.ilike(f"%{_word}%"))
         ).all()
 
+
 def get_context_id(_id: int):
     """Получить контекст по его ID"""
     with Session(engine) as session:
         return session.get(Context, _id)
+
 
 def counter_ref(_id: int) -> int:
     """Сколько записей в translations ссылаются на контекст с данным id"""
@@ -173,7 +175,10 @@ def del_context(_id: int):
             print("Контекст с таким ID не существует")
         else:
             print_context(context)
-            if input('Подтвердите удаление контекста - введите "yes": ').strip() == "yes":
+            if (
+                input('Подтвердите удаление контекста - введите "yes": ').strip()
+                == "yes"
+            ):
                 session.delete(context)
                 session.commit()
 
@@ -208,7 +213,19 @@ if __name__ == "__main__":
                     print("================================")
                     print("Перевод с английского на русский")
                     var = input("Введите слово: ").strip()
-                    if var in ("sr", "a", "u", "d", "q", "ac", "uc", "sc", "dc", "m", "ci"):
+                    if var in (
+                        "sr",
+                        "a",
+                        "u",
+                        "d",
+                        "q",
+                        "ac",
+                        "uc",
+                        "sc",
+                        "dc",
+                        "m",
+                        "ci",
+                    ):
                         break
 
                     # Получить переводы с английского на русский
@@ -225,7 +242,19 @@ if __name__ == "__main__":
                     print("================================")
                     print("Перевод с русского на английский")
                     var = input("Введите слово: ").strip()
-                    if var in ("s", "a", "u", "d", "q", "ac", "uc", "sc", "dc", "m", "ci"):
+                    if var in (
+                        "s",
+                        "a",
+                        "u",
+                        "d",
+                        "q",
+                        "ac",
+                        "uc",
+                        "sc",
+                        "dc",
+                        "m",
+                        "ci",
+                    ):
                         break
 
                     # Получить переводы с русского на английский
@@ -242,7 +271,19 @@ if __name__ == "__main__":
                     print("================================")
                     print("Получить контексты по ключевому слову")
                     var = input("Введите слово: ").strip()
-                    if var in ("s", "a", "u", "d", "q", "ac", "uc", "sr", "dc", "m", "ci"):
+                    if var in (
+                        "s",
+                        "a",
+                        "u",
+                        "d",
+                        "q",
+                        "ac",
+                        "uc",
+                        "sr",
+                        "dc",
+                        "m",
+                        "ci",
+                    ):
                         break
 
                     # Получить контексты
@@ -259,7 +300,19 @@ if __name__ == "__main__":
                     print("================================")
                     print("Получить контекст по его ID")
                     var = input("Введите ID контекста: ").strip()
-                    if var in ("s", "a", "u", "d", "q", "ac", "uc", "sr", "dc", "m", "sc"):
+                    if var in (
+                        "s",
+                        "a",
+                        "u",
+                        "d",
+                        "q",
+                        "ac",
+                        "uc",
+                        "sr",
+                        "dc",
+                        "m",
+                        "sc",
+                    ):
                         break
 
                     # Получить контекст
@@ -275,7 +328,19 @@ if __name__ == "__main__":
                     print("================================")
                     print("Добавить перевод")
                     var = input("Введите слово: ").strip()
-                    if var in ("sr", "s", "u", "d", "q", "ac", "uc", "sc", "dc", "m", "ci"):
+                    if var in (
+                        "sr",
+                        "s",
+                        "u",
+                        "d",
+                        "q",
+                        "ac",
+                        "uc",
+                        "sc",
+                        "dc",
+                        "m",
+                        "ci",
+                    ):
                         break
                     value = input("Введите перевод: ").strip()
                     context = input("Введите ID контекста: ")
@@ -289,7 +354,19 @@ if __name__ == "__main__":
                     print("================================")
                     print("Добавить контекст")
                     var = input("Введите контекст: ").strip()
-                    if var in ("sr", "s", "u", "d", "q", "a", "uc", "sc", "dc", "m", "ci"):
+                    if var in (
+                        "sr",
+                        "s",
+                        "u",
+                        "d",
+                        "q",
+                        "a",
+                        "uc",
+                        "sc",
+                        "dc",
+                        "m",
+                        "ci",
+                    ):
                         break
                     value = input("Введите перевод контекста: ").strip()
                     if var and value:
@@ -297,19 +374,55 @@ if __name__ == "__main__":
             case "u":
                 while True:
                     var = input()
-                    if var in ("sr", "s", "a", "d", "q", "ac", "uc", "sc", "dc", "m", "ci"):
+                    if var in (
+                        "sr",
+                        "s",
+                        "a",
+                        "d",
+                        "q",
+                        "ac",
+                        "uc",
+                        "sc",
+                        "dc",
+                        "m",
+                        "ci",
+                    ):
                         break
                     print("u - пусто")
             case "uc":
                 while True:
                     var = input()
-                    if var in ("sr", "s", "a", "d", "q", "ac", "u", "sc", "dc", "m", "ci"):
+                    if var in (
+                        "sr",
+                        "s",
+                        "a",
+                        "d",
+                        "q",
+                        "ac",
+                        "u",
+                        "sc",
+                        "dc",
+                        "m",
+                        "ci",
+                    ):
                         break
                     print("u - пусто")
             case "d":
                 while True:
                     var = input()
-                    if var in ("sr", "s", "a", "u", "q", "ac", "uc", "sc", "dc", "m", "ci"):
+                    if var in (
+                        "sr",
+                        "s",
+                        "a",
+                        "u",
+                        "q",
+                        "ac",
+                        "uc",
+                        "sc",
+                        "dc",
+                        "m",
+                        "ci",
+                    ):
                         break
                     print("d - пусто")
             case "dc":
@@ -317,7 +430,19 @@ if __name__ == "__main__":
                     print("================================")
                     print("Удалить контекст")
                     var = input("Введите ID удаляемой строки контекста: ")
-                    if var in ("sr", "s", "a", "u", "q", "ac", "uc", "sc", "d", "m", "ci"):
+                    if var in (
+                        "sr",
+                        "s",
+                        "a",
+                        "u",
+                        "q",
+                        "ac",
+                        "uc",
+                        "sc",
+                        "d",
+                        "m",
+                        "ci",
+                    ):
                         break
                     del_context(int(var))
             case "m":
