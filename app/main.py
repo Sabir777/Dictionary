@@ -168,12 +168,14 @@ def print_context(v: Context, title: str | None = None) -> None:
 def del_context(_id: int):
     """Удалить контекст по его ID"""
     with Session(engine) as session:
-        stmt = select(Context).where(Context.id == _id)
-        context = session.scalars(stmt).one()
-        print_context(context)
-        if input('Подтвердите удаление контекста - введите "yes": ').strip() == "yes":
-            session.delete(context)
-            session.commit()
+        context = session.get(Context, _id)
+        if not context:
+            print("Контекст с таким ID не существует")
+        else:
+            print_context(context)
+            if input('Подтвердите удаление контекста - введите "yes": ').strip() == "yes":
+                session.delete(context)
+                session.commit()
 
 
 # def normal_to_all_lower() -> None:
