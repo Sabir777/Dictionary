@@ -8,6 +8,24 @@ from sqlalchemy import Row, String, inspect, select, func  # noqa: F401
 from sqlalchemy.orm import Session
 
 
+def menu():
+    print("\n=======Переводчик (en-ru)=======")
+    print("================================")
+    print("""Переключение режимов работы:
+    s - выполнить перевод c английского на русский
+    sr - выполнить перевод c русского на английский
+    sc - показать один или несколько контекстов по ключевому слову
+    ci - показать контекст по его ID
+    a - добавить новый перевод
+    ac - добавить новый контекст
+    u - редактировать перевод
+    uc - редактировать контекст
+    d - удалить перевод
+    dc - удалить контекст
+    m - показать горячие клавиши
+    q - выход из программы""")
+
+
 def add_translate(**kwargs) -> None:
     """Добавить перeвод в базу данных"""
     kwargs2 = {k.lower(): v for k, v in kwargs.items() if v}
@@ -15,11 +33,13 @@ def add_translate(**kwargs) -> None:
         session.add(Dictionary(**kwargs2))
         session.commit()
 
+
 def add_context(context_en, context_ru) -> None:
     """Добавить контекст в базу данных"""
     with Session(engine) as session:
         session.add(Context(context_en=context_en, context_ru=context_ru))
         session.commit()
+
 
 # def add_translate_dict(translates: dict) -> None:
 #     """Добавить переводы в базу данных"""
@@ -30,18 +50,14 @@ def add_context(context_en, context_ru) -> None:
 
 
 def get_translate_en_to_ru(_word: str):
-    """Получить перевод с английского на русский (outer join с contexts).
-
-    Возвращает строки как будто из одной «плоской» таблицы с полями:
-    id, word, value, context_en, context_ru, comment.
-    Если у перевода нет контекста, context_en/context_ru будут NULL (outer join).
-    """
+    """Получить перевод с английского на русский"""
     with Session(engine) as session:
         stmt = (
             select(
                 Dictionary.id,
                 Dictionary.word,
                 Dictionary.value,
+                Dictionary.context_id,
                 Context.context_en,
                 Context.context_ru,
                 Dictionary.comment,
@@ -53,18 +69,14 @@ def get_translate_en_to_ru(_word: str):
 
 
 def get_translate_ru_to_en(_word: str):
-    """Получить перевод c русского на английский (outer join с contexts).
-
-    Возвращает строки как будто из одной «плоской» таблицы с полями:
-    id, word, value, context_en, context_ru, comment.
-    Если у перевода нет контекста, context_en/context_ru будут NULL (outer join).
-    """
+    """Получить перевод c русского на английский"""
     with Session(engine) as session:
         stmt = (
             select(
                 Dictionary.id,
                 Dictionary.word,
                 Dictionary.value,
+                Dictionary.context_id,
                 Context.context_en,
                 Context.context_ru,
                 Dictionary.comment,
@@ -73,6 +85,7 @@ def get_translate_ru_to_en(_word: str):
             .where(Dictionary.value.ilike(f"%{_word}%"))
         )
         return session.execute(stmt).all()
+
 
 def get_context(_word: str):
     """Получить один или несколько контекстов по ключевому слову"""
@@ -115,7 +128,7 @@ def print_translate(title: str, v: Row) -> None:
     table.add_row("Перевод", style=H2)
     table.add_row(v.value)
     if v.context_en:
-        table.add_row("Context", style=H3)
+        table.add_row(f"Context (ID: {v.context_id})", style=H3)
         table.add_row(v.context_en)
     if v.context_ru:
         table.add_row("Контекст", style=H4)
@@ -125,6 +138,7 @@ def print_translate(title: str, v: Row) -> None:
         table.add_row(v.comment)
     print()
     Console().print(table)
+
 
 def print_context(v: Context, title: str | None = None) -> None:
     """Напечатать контекст"""
@@ -146,6 +160,7 @@ def print_context(v: Context, title: str | None = None) -> None:
     print()
     Console().print(table)
 
+
 def del_context(_id: int):
     """Удалить контекст по его ID"""
     with Session(engine) as session:
@@ -155,6 +170,7 @@ def del_context(_id: int):
         if input('Подтвердите удаление контекста - введите "yes": ').strip() == "yes":
             session.delete(context)
             session.commit()
+
 
 # def normal_to_all_lower() -> None:
 #     """Нормализация: перевод всех строковых полей в нижний регистр"""
@@ -175,17 +191,8 @@ def del_context(_id: int):
 if __name__ == "__main__":
     init_db()  # создать таблицы
 
-    print("""Переключение режимов работы:
-    s - выполнить перевод c английского на русский
-    sr - выполнить перевод c русского на английский
-    sc - показать один или несколько контекстов по ключевому слову
-    a - добавить новый перевод
-    ac - добавить новый контекст
-    u - редактировать перевод
-    uc - редактировать контекст
-    d - удалить перевод
-    dc - удалить контекст
-    q - выход из программы""")
+    # Справка по горячим клавишам
+    menu()
 
     var = "s"
     while var != "q":
@@ -195,7 +202,7 @@ if __name__ == "__main__":
                     print("================================")
                     print("Перевод с английского на русский")
                     var = input("Введите слово: ").strip()
-                    if var in ("sr", "a", "u", "d", "q", "ac", "uc", "sc", "dc"):
+                    if var in ("sr", "a", "u", "d", "q", "ac", "uc", "sc", "dc", "m"):
                         break
 
                     # Получить переводы с английского на русский
@@ -212,7 +219,7 @@ if __name__ == "__main__":
                     print("================================")
                     print("Перевод с русского на английский")
                     var = input("Введите слово: ").strip()
-                    if var in ("s", "a", "u", "d", "q", "ac", "uc", "sc", "dc"):
+                    if var in ("s", "a", "u", "d", "q", "ac", "uc", "sc", "dc", "m"):
                         break
 
                     # Получить переводы с русского на английский
@@ -229,7 +236,7 @@ if __name__ == "__main__":
                     print("================================")
                     print("Получить контексты по ключевому слову")
                     var = input("Введите слово: ").strip()
-                    if var in ("s", "a", "u", "d", "q", "ac", "uc", "sr", "dc"):
+                    if var in ("s", "a", "u", "d", "q", "ac", "uc", "sr", "dc", "m"):
                         break
 
                     # Получить контексты
@@ -246,24 +253,21 @@ if __name__ == "__main__":
                     print("================================")
                     print("Добавить перевод")
                     var = input("Введите слово: ").strip()
-                    if var in ("sr", "s", "u", "d", "q", "ac", "uc", "sc", "dc"):
+                    if var in ("sr", "s", "u", "d", "q", "ac", "uc", "sc", "dc", "m"):
                         break
                     value = input("Введите перевод: ").strip()
                     context = input("Введите ID контекста: ")
                     context = int(context) if context.isdigit() else None
                     comment = input("Введите комментарий: ").strip().lower()
                     add_translate(
-                        word=var,
-                        value=value,
-                        context=context,
-                        comment=comment
+                        word=var, value=value, context=context, comment=comment
                     )
             case "ac":
                 while True:
                     print("================================")
                     print("Добавить контекст")
                     var = input("Введите контекст: ").strip()
-                    if var in ("sr", "s", "u", "d", "q", "a", "uc", "sc", "dc"):
+                    if var in ("sr", "s", "u", "d", "q", "a", "uc", "sc", "dc", "m"):
                         break
                     value = input("Введите перевод контекста: ").strip()
                     if var and value:
@@ -271,19 +275,19 @@ if __name__ == "__main__":
             case "u":
                 while True:
                     var = input()
-                    if var in ("sr", "s", "a", "d", "q", "ac", "uc", "sc", "dc"):
+                    if var in ("sr", "s", "a", "d", "q", "ac", "uc", "sc", "dc", "m"):
                         break
                     print("u - пусто")
             case "uc":
                 while True:
                     var = input()
-                    if var in ("sr", "s", "a", "d", "q", "ac", "u", "sc", "dc"):
+                    if var in ("sr", "s", "a", "d", "q", "ac", "u", "sc", "dc", "m"):
                         break
                     print("u - пусто")
             case "d":
                 while True:
                     var = input()
-                    if var in ("sr", "s", "a", "u", "q", "ac", "uc", "sc", "dc"):
+                    if var in ("sr", "s", "a", "u", "q", "ac", "uc", "sc", "dc", "m"):
                         break
                     print("d - пусто")
             case "dc":
@@ -291,9 +295,12 @@ if __name__ == "__main__":
                     print("================================")
                     print("Удалить контекст")
                     var = input("Введите ID удаляемой строки контекста: ")
-                    if var in ("sr", "s", "a", "u", "q", "ac", "uc", "sc", "d"):
+                    if var in ("sr", "s", "a", "u", "q", "ac", "uc", "sc", "d", "m"):
                         break
                     del_context(int(var))
+            case "m":
+                menu()
+                var = "s"
             case _:
                 print("Недопустимое состояние: выход")
                 break
