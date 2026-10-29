@@ -1,13 +1,10 @@
 import sys
-from sqlalchemy import create_engine, event
+from db import engine
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-from typing import cast
-from sqlalchemy import CursorResult
+from sqlalchemy import event
 from models import Context, Dictionary
-
-engine = create_engine("sqlite:///dictionary.db")
 
 
 @event.listens_for(engine, "connect")
@@ -58,7 +55,7 @@ def check_context(session: Session, context_id: int | None) -> None:
 
 
 def insert_translations(
-    session: Session, pairs: list[tuple], context_id: int | None
+    session: Session, pairs: list[tuple[str, str, str | None]], context_id: int | None
 ) -> int:
     rows = [
         {"word": w, "value": v, "comment": c, "context_id": context_id}
@@ -67,7 +64,7 @@ def insert_translations(
     stmt = sqlite_insert(Dictionary).on_conflict_do_nothing(
         index_elements=["word", "value"]
     )
-    result = cast(CursorResult, session.execute(stmt, rows))
+    result = session.connection().execute(stmt, rows)
     return result.rowcount
 
 
