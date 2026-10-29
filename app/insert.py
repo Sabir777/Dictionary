@@ -1,10 +1,11 @@
 import sys
+
 from db import engine
+from models import Context, Dictionary
+from sqlalchemy import event
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-from sqlalchemy import event
-from models import Context, Dictionary
 
 
 @event.listens_for(engine, "connect")

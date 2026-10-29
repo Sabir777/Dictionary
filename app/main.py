@@ -1,12 +1,12 @@
 import readline  # noqa: F401
+import subprocess
 
 from db import engine, init_db
 from models import Context, Dictionary
 from rich.console import Console
 from rich.table import Table
-from sqlalchemy import Row, String, inspect, select, func  # noqa: F401
+from sqlalchemy import Row, String, func, inspect, select  # noqa: F401
 from sqlalchemy.orm import Session
-import subprocess
 
 
 def copy_to_clipboard(text: str) -> None:
@@ -202,7 +202,6 @@ def update_context(_id: int):
             new_val = input("Вы можете вставить его и потом отредактировать:\n").strip()
             if new_val and (old_value != new_val):
                 context.context_en = new_val
-            
 
             # Редактирую Context: ru
             old_value = context.context_ru
