@@ -118,6 +118,13 @@ def counter_ref(_id: int) -> int:
         return session.scalar(stmt) or 0
 
 
+def max_id(model: type[Dictionary] | type[Context]) -> int:
+    """Вернуть максимальный id для таблицы"""
+    with Session(engine) as session:
+        stmt = select(func.max(model.id))
+        return session.scalar(stmt) or 0
+
+
 def print_translate(title: str, v: Row) -> None:
     """Напечатать перевод"""
 
@@ -216,22 +223,6 @@ def update_context(_id: int):
             session.commit()
 
 
-# def normal_to_all_lower() -> None:
-#     """Нормализация: перевод всех строковых полей в нижний регистр"""
-#     str_cols = [
-#         c.key
-#         for c in inspect(Dictionary).columns
-#         if isinstance(c.type, String) and not c.primary_key
-#     ]
-#     with Session(engine) as session:
-#         for row in session.scalars(select(Dictionary)):
-#             for name in str_cols:
-#                 value = getattr(row, name)
-#                 if value is not None:
-#                     setattr(row, name, value.lower())
-#         session.commit()
-
-
 if __name__ == "__main__":
     init_db()  # создать таблицы
 
@@ -245,6 +236,7 @@ if __name__ == "__main__":
                 while True:
                     print("================================")
                     print("Перевод с английского на русский")
+                    print(f"Всего переводов в базе данных: {max_id(Dictionary)}")
                     var = input("Введите слово: ").strip()
                     if var in (
                         "sr",
@@ -274,6 +266,7 @@ if __name__ == "__main__":
                 while True:
                     print("================================")
                     print("Перевод с русского на английский")
+                    print(f"Всего переводов в базе данных: {max_id(Dictionary)}")
                     var = input("Введите слово: ").strip()
                     if var in (
                         "s",
@@ -303,6 +296,7 @@ if __name__ == "__main__":
                 while True:
                     print("================================")
                     print("Получить контексты по ключевому слову")
+                    print(f"Максимальный ID: {max_id(Context)}")
                     var = input("Введите слово: ").strip()
                     if var in (
                         "s",
@@ -332,6 +326,7 @@ if __name__ == "__main__":
                 while True:
                     print("================================")
                     print("Получить контекст по его ID")
+                    print(f"Максимальный ID: {max_id(Context)}")
                     var = input("Введите ID контекста: ").strip()
                     if var in (
                         "s",
