@@ -47,14 +47,6 @@ def add_context(context_en, context_ru) -> None:
         session.commit()
 
 
-# def add_translate_dict(translates: dict) -> None:
-#     """Добавить переводы в базу данных"""
-#     with Session(engine) as session:
-#         dict_list = [Dictionary(word=w, value=v) for w, v in translates.items()]
-#         session.add_all(dict_list)
-#         session.commit()
-
-
 def get_translate_en_to_ru(_word: str):
     """Получить перевод с английского на русский"""
     with Session(engine) as session:
