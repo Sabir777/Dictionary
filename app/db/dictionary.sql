@@ -9,6 +9,7 @@ CREATE TABLE contexts (
 );
 INSERT INTO contexts VALUES(1,'You are given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.','Вам дан массив целых чисел nums и целое число target, верните индексы двух чисел так, чтобы их сумма была равна target.');
 INSERT INTO contexts VALUES(2,'You may assume that each input would have exactly one solution, and you may not use the same element twice.','Вы можете предположить, что у каждого входного значения будет ровно одно решение, и вы не можете использовать один и тот же элемент дважды.');
+INSERT INTO contexts VALUES(3,'You can return the answer in any order.','Вы можете вернуть ответ в любом порядке.');
 CREATE TABLE translations (
 	id INTEGER NOT NULL, 
 	word TEXT NOT NULL, 
@@ -50,4 +51,12 @@ INSERT INTO translations VALUES(28,'twice','дважды',2,NULL);
 INSERT INTO translations VALUES(29,'exactly one','ровно один',2,NULL);
 INSERT INTO translations VALUES(30,'the same element','один и тот же элемент',2,NULL);
 INSERT INTO translations VALUES(31,'use twice','использовать дважды',2,NULL);
+INSERT INTO translations VALUES(32,'you can','вы можете',3,NULL);
+INSERT INTO translations VALUES(33,'the answer','ответ',3,NULL);
+INSERT INTO translations VALUES(34,'in any order','в любом порядке',3,NULL);
+INSERT INTO translations VALUES(35,'any','любой',3,NULL);
+INSERT INTO translations VALUES(36,'order','порядок',3,'in order = по порядку; in any order = в любом порядке');
+INSERT INTO translations VALUES(37,'in','в',3,NULL);
+INSERT INTO translations VALUES(38,'return the answer','вернуть ответ',3,NULL);
+INSERT INTO translations VALUES(39,'any order','любой порядок',3,NULL);
 COMMIT;

@@ -1,0 +1,32 @@
+# Вставка переводов в словарь en-ru
+
+# Даю два контекста: 
+# На английском и его перевод
+
+# Образец (вход)
+# context_en = "You may assume that each input would have exactly one solution, and you may not use the same element twice."
+# context_ru = "Вы можете предположить, что у каждого входного значения будет ровно одно решение, и вы не можете использовать один и тот же элемент дважды."
+
+# Образец (выход)
+# # (word, value, comment)
+# pairs = [
+#     ("you may assume", "вы можете предположить", None),
+#     ("assume", "предположить", None),
+#     ("each", "каждый", None),
+#     ("input", "входное значение", None),
+#     ("would have", "будет", "would здесь указывает на предположение"),
+#     ("exactly", "ровно", None),
+#     ("one", "один", None),
+#     ("solution", "решение", None),
+#     ("and", "и", None),
+#     ("you may not", "вы не можете", "may not = запрет/невозможность"),
+#     ("use", "использовать", None),
+#     ("the same", "тот же самый", None),
+#     ("element", "элемент", None),
+#     ("twice", "дважды", None),
+#     ("exactly one", "ровно один", None),
+#     ("the same element", "один и тот же элемент", None),
+#     ("use twice", "использовать дважды", None),
+# ]
+
+Контексты:
