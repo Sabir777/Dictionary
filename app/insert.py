@@ -1,6 +1,7 @@
 import sys
 
 from db import engine
+from insert import CONTEXT_ID, pairs
 from models import Context, Dictionary
 from sqlalchemy import event
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
@@ -13,30 +14,6 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor = dbapi_connection.cursor()
     cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()
-
-
-CONTEXT_ID = 2  # None, если пакет без контекста
-
-# (word, value, comment)
-pairs = [
-    ("you may assume", "вы можете предположить", None),
-    ("assume", "предположить", None),
-    ("each", "каждый", None),
-    ("input", "входное значение", None),
-    ("would have", "будет", "would здесь указывает на предположение"),
-    ("exactly", "ровно", None),
-    ("one", "один", None),
-    ("solution", "решение", None),
-    ("and", "и", None),
-    ("you may not", "вы не можете", "may not = запрет/невозможность"),
-    ("use", "использовать", None),
-    ("the same", "тот же самый", None),
-    ("element", "элемент", None),
-    ("twice", "дважды", None),
-    ("exactly one", "ровно один", None),
-    ("the same element", "один и тот же элемент", None),
-    ("use twice", "использовать дважды", None),
-]
 
 
 class ContextNotFoundError(Exception):
