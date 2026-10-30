@@ -46,26 +46,21 @@ def add_context(context_en, context_ru) -> None:
         session.add(Context(context_en=context_en, context_ru=context_ru))
         session.commit()
 
-def update_translate(d: Dictionary, **kwargs) -> None:
-    """Редактировать перeвод"""
-    kwargs2 = {k: v for k, v in kwargs.items() if v}
-    with Session(engine) as session:
-        for k, v in kwargs2:
-            setattr(d, k, v)
-        session.commit()
 
 def get_translate_en_to_ru(_word: str):
     """Получить перевод с английского на русский"""
     with Session(engine) as session:
         stmt = (
             select(
-                Dictionary.id,
-                Dictionary.word,
-                Dictionary.value,
-                Dictionary.context_id,
-                Context.context_en,
-                Context.context_ru,
-                Dictionary.comment,
+                Dictionary,
+                Context
+                # Dictionary.id,
+                # Dictionary.word,
+                # Dictionary.value,
+                # Dictionary.context_id,
+               # Context.context_en,
+                # Context.context_ru,
+                # Dictionary.comment,
             )
             .outerjoin(Context, Dictionary.context)
             .where(Dictionary.word.ilike(f"%{_word}%"))
@@ -78,13 +73,15 @@ def get_translate_ru_to_en(_word: str):
     with Session(engine) as session:
         stmt = (
             select(
-                Dictionary.id,
-                Dictionary.word,
-                Dictionary.value,
-                Dictionary.context_id,
-                Context.context_en,
-                Context.context_ru,
-                Dictionary.comment,
+                Dictionary,
+                Context
+                # Dictionary.id,
+                # Dictionary.word,
+                # Dictionary.value,
+                # Dictionary.context_id,
+                # Context.context_en,
+                # Context.context_ru,
+                # Dictionary.comment,
             )
             .outerjoin(Context, Dictionary.context)
             .where(Dictionary.value.ilike(f"%{_word}%"))
@@ -130,7 +127,7 @@ def max_id(model: type[Dictionary] | type[Context]) -> int:
         return session.scalar(stmt) or 0
 
 
-def print_translate(v: Row, title: str | None = None) -> None:
+def print_translate(row, title: str | None = None) -> None:
     """Напечатать перевод"""
 
     H = "bold white on blue"
@@ -140,22 +137,22 @@ def print_translate(v: Row, title: str | None = None) -> None:
     H4 = "bold white on cyan"
     H5 = "bold white on bright_black"
 
+    dictionary, context = row
     table = Table(title=title, show_lines=True, header_style=H)
     table.add_column("ID", justify="center")
-    table.add_row(str(v.id))
+    table.add_row(str(dictionary.id))
     table.add_row("Word", style=H1)
-    table.add_row(v.word)
+    table.add_row(dictionary.word)
     table.add_row("Перевод", style=H2)
-    table.add_row(v.value)
-    if v.context_en:
-        table.add_row(f"Context (ID: {v.context_id})", style=H3)
-        table.add_row(v.context_en)
-    if v.context_ru:
+    table.add_row(dictionary.value)
+    if dictionary.context_id:
+        table.add_row(f"Context (ID: {dictionary.context_id})", style=H3)
+        table.add_row(context.context_en)
         table.add_row("Контекст", style=H4)
-        table.add_row(v.context_ru)
-    if v.comment:
+        table.add_row(context.context_ru)
+    if dictionary.comment:
         table.add_row("Комментарий", style=H5)
-        table.add_row(v.comment)
+        table.add_row(dictionary.comment)
     print()
     Console().print(table)
 
@@ -195,6 +192,15 @@ def del_context(_id: int):
             ):
                 session.delete(context)
                 session.commit()
+
+
+def update_translate(d: Dictionary, **kwargs) -> None:
+    """Редактировать перeвод"""
+    kwargs2 = {k: v for k, v in kwargs.items() if v}
+    with Session(engine) as session:
+        for k, v in kwargs2.items():
+            setattr(d, k, v)
+        session.commit()
 
 
 def update_context(_id: int):
@@ -427,6 +433,9 @@ if __name__ == "__main__":
                         # Получаю объект-строку по ее id
                         d = get_dictionary_id(int(var))
                         if d:
+                            idc = d.context_id
+                            c = get_context_id(idc) if idc else None
+                            print_translate((d, c))
                             word =  input("Введите слово (en): ").strip().lower()
                             value = input("Введите перевод (ru): ").strip().lower()
                             comment = input("Введите комментарий: ").strip().lower()
