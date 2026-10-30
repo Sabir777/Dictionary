@@ -51,42 +51,22 @@ def get_translate_en_to_ru(_word: str):
     """Получить перевод с английского на русский"""
     with Session(engine) as session:
         stmt = (
-            select(
-                Dictionary,
-                Context
-                # Dictionary.id,
-                # Dictionary.word,
-                # Dictionary.value,
-                # Dictionary.context_id,
-               # Context.context_en,
-                # Context.context_ru,
-                # Dictionary.comment,
-            )
+            select(Dictionary)
             .outerjoin(Context, Dictionary.context)
             .where(Dictionary.word.ilike(f"%{_word}%"))
         )
-        return session.execute(stmt).all()
+        return session.execute(stmt).scalars().all()
 
 
 def get_translate_ru_to_en(_word: str):
     """Получить перевод c русского на английский"""
     with Session(engine) as session:
         stmt = (
-            select(
-                Dictionary,
-                Context
-                # Dictionary.id,
-                # Dictionary.word,
-                # Dictionary.value,
-                # Dictionary.context_id,
-                # Context.context_en,
-                # Context.context_ru,
-                # Dictionary.comment,
-            )
+            select(Dictionary)
             .outerjoin(Context, Dictionary.context)
             .where(Dictionary.value.ilike(f"%{_word}%"))
         )
-        return session.execute(stmt).all()
+        return session.execute(stmt).scalars().all()
 
 
 def get_context(_word: str):
@@ -127,7 +107,7 @@ def max_id(model: type[Dictionary] | type[Context]) -> int:
         return session.scalar(stmt) or 0
 
 
-def print_translate(row, title: str | None = None) -> None:
+def print_translate(d, title: str | None = None) -> None:
     """Напечатать перевод"""
 
     H = "bold white on blue"
@@ -137,22 +117,24 @@ def print_translate(row, title: str | None = None) -> None:
     H4 = "bold white on cyan"
     H5 = "bold white on bright_black"
 
-    dictionary, context = row
+    _id = d.context_id
+    c = get_context_id(_id) if _id else None
+
     table = Table(title=title, show_lines=True, header_style=H)
     table.add_column("ID", justify="center")
-    table.add_row(str(dictionary.id))
+    table.add_row(str(d.id))
     table.add_row("Word", style=H1)
-    table.add_row(dictionary.word)
+    table.add_row(d.word)
     table.add_row("Перевод", style=H2)
-    table.add_row(dictionary.value)
-    if dictionary.context_id:
-        table.add_row(f"Context (ID: {dictionary.context_id})", style=H3)
-        table.add_row(context.context_en)
+    table.add_row(d.value)
+    if _id and c:
+        table.add_row(f"Context (ID: {_id})", style=H3)
+        table.add_row(c.context_en)
         table.add_row("Контекст", style=H4)
-        table.add_row(context.context_ru)
-    if dictionary.comment:
+        table.add_row(c.context_ru)
+    if d.comment:
         table.add_row("Комментарий", style=H5)
-        table.add_row(dictionary.comment)
+        table.add_row(d.comment)
     print()
     Console().print(table)
 
@@ -271,8 +253,8 @@ if __name__ == "__main__":
                         print("Слово не найдено")
                         continue
                     else:
-                        for i, v in enumerate(result):
-                            print_translate(v, str(i + 1))
+                        for i, d in enumerate(result):
+                            print_translate(d, str(i + 1))
             case "sr":
                 while True:
                     print("================================")
@@ -301,8 +283,8 @@ if __name__ == "__main__":
                         print("Слово не найдено")
                         continue
                     else:
-                        for i, v in enumerate(result):
-                            print_translate(v, str(i + 1))
+                        for i, d in enumerate(result):
+                            print_translate(d, str(i + 1))
             case "sc":
                 while True:
                     print("================================")
@@ -433,17 +415,15 @@ if __name__ == "__main__":
                         # Получаю объект-строку по ее id
                         d = get_dictionary_id(int(var))
                         if d:
-                            idc = d.context_id
-                            c = get_context_id(idc) if idc else None
-                            print_translate((d, c))
+                            print_translate(d)
                             word =  input("Введите слово (en): ").strip().lower()
                             value = input("Введите перевод (ru): ").strip().lower()
                             comment = input("Введите комментарий: ").strip().lower()
                             update_translate(d, word=word, value=value, comment=comment)
                         else:
-                            print("Перевода с таким ID не существует!!!")
+                            print("Перевода с таким ID не существует!")
                     else:
-                        print("Ошибка: вы ввели не число!!!")
+                        print("Ошибка: вы ввели не число!")
             case "uc":
                 while True:
                     print("================================")
