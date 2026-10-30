@@ -34,7 +34,7 @@ def menu():
 
 def add_translate(**kwargs) -> None:
     """Добавить перeвод в базу данных"""
-    kwargs2 = {k.lower(): v for k, v in kwargs.items() if v}
+    kwargs2 = {k: v for k, v in kwargs.items() if v}
     with Session(engine) as session:
         session.add(Dictionary(**kwargs2))
         session.commit()
@@ -46,6 +46,13 @@ def add_context(context_en, context_ru) -> None:
         session.add(Context(context_en=context_en, context_ru=context_ru))
         session.commit()
 
+def update_translate(d: Dictionary, **kwargs) -> None:
+    """Редактировать перeвод"""
+    kwargs2 = {k: v for k, v in kwargs.items() if v}
+    with Session(engine) as session:
+        for k, v in kwargs2:
+            setattr(d, k, v)
+        session.commit()
 
 def get_translate_en_to_ru(_word: str):
     """Получить перевод с английского на русский"""
@@ -91,6 +98,12 @@ def get_context(_word: str):
         return session.scalars(
             select(Context).where(Context.context_en.ilike(f"%{_word}%"))
         ).all()
+
+
+def get_dictionary_id(_id: int):
+    """Получить контекст по его ID"""
+    with Session(engine) as session:
+        return session.get(Dictionary, _id)
 
 
 def get_context_id(_id: int):
@@ -362,12 +375,12 @@ if __name__ == "__main__":
                         "ci",
                     ):
                         break
-                    value = input("Введите перевод: ").strip()
+                    value = input("Введите перевод: ").strip().lower()
                     context = input("Введите ID контекста: ")
                     context = int(context) if context.isdigit() else None
                     comment = input("Введите комментарий: ").strip().lower()
                     add_translate(
-                        word=var, value=value, context=context, comment=comment
+                        word=var.lower(), value=value, context=context, comment=comment
                     )
             case "ac":
                 while True:
@@ -393,7 +406,9 @@ if __name__ == "__main__":
                         add_context(context_en=var, context_ru=value)
             case "u":
                 while True:
-                    var = input()
+                    print("================================")
+                    print("Редактировать перевод")
+                    var = input("Введите ID перевода: ").strip()
                     if var in (
                         "sr",
                         "s",
@@ -408,7 +423,21 @@ if __name__ == "__main__":
                         "ci",
                     ):
                         break
-                    print("u - пусто")
+                    if var.isdigit():
+                        # Получаю объект-строку по ее id
+                        d = get_dictionary_id(int(var))
+                        if d:
+                            word =  input("Введите слово (en): ").strip().lower()
+                            value = input("Введите перевод (ru): ").strip().lower()
+                            comment = input("Введите комментарий: ").strip().lower()
+                        else:
+                            print("Перевода с таким ID не существует!!!")
+                    else:
+                        print("Ошибка: вы ввели не число!!!")
+
+                    # add_translate(
+                    #     word=var, value=value, context=context, comment=comment
+                    # )
             case "uc":
                 while True:
                     print("================================")
