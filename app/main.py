@@ -130,7 +130,7 @@ def max_id(model: type[Dictionary] | type[Context]) -> int:
         return session.scalar(stmt) or 0
 
 
-def print_translate(title: str, v: Row) -> None:
+def print_translate(v: Row, title: str | None = None) -> None:
     """Напечатать перевод"""
 
     H = "bold white on blue"
@@ -266,7 +266,7 @@ if __name__ == "__main__":
                         continue
                     else:
                         for i, v in enumerate(result):
-                            print_translate(str(i + 1), v)
+                            print_translate(v, str(i + 1))
             case "sr":
                 while True:
                     print("================================")
@@ -296,7 +296,7 @@ if __name__ == "__main__":
                         continue
                     else:
                         for i, v in enumerate(result):
-                            print_translate(str(i + 1), v)
+                            print_translate(v, str(i + 1))
             case "sc":
                 while True:
                     print("================================")
@@ -430,14 +430,11 @@ if __name__ == "__main__":
                             word =  input("Введите слово (en): ").strip().lower()
                             value = input("Введите перевод (ru): ").strip().lower()
                             comment = input("Введите комментарий: ").strip().lower()
+                            update_translate(d, word=word, value=value, comment=comment)
                         else:
                             print("Перевода с таким ID не существует!!!")
                     else:
                         print("Ошибка: вы ввели не число!!!")
-
-                    # add_translate(
-                    #     word=var, value=value, context=context, comment=comment
-                    # )
             case "uc":
                 while True:
                     print("================================")
