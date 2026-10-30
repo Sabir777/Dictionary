@@ -19,6 +19,7 @@ def menu():
     print("================================")
     print("""Переключение режимов работы:
     s - выполнить перевод c английского на русский
+    si - показать перевод по его ID
     sr - выполнить перевод c русского на английский
     sc - показать один или несколько контекстов по ключевому слову
     ci - показать контекст по его ID
@@ -78,7 +79,7 @@ def get_context(_word: str):
 
 
 def get_dictionary_id(_id: int):
-    """Получить контекст по его ID"""
+    """Получить перевод по его ID"""
     with Session(engine) as session:
         return session.get(Dictionary, _id)
 
@@ -249,6 +250,7 @@ if __name__ == "__main__":
                         "dc",
                         "m",
                         "ci",
+                        "si",
                     ):
                         break
 
@@ -261,6 +263,36 @@ if __name__ == "__main__":
                     else:
                         for i, d in enumerate(result):
                             print_translate(d, str(i + 1))
+            case "si":
+                while True:
+                    print("================================")
+                    print("Получить перевод по его ID")
+                    print(f"Максимальный ID: {max_id(Dictionary)}")
+                    var = input("Введите ID перевода: ").strip()
+                    if var in (
+                        "s",
+                        "a",
+                        "u",
+                        "d",
+                        "q",
+                        "ac",
+                        "uc",
+                        "sr",
+                        "dc",
+                        "m",
+                        "sc",
+                        "ci",
+                    ):
+                        break
+
+                    # Получить контекст
+                    result = get_dictionary_id(int(var))
+
+                    if not result:
+                        print("Перевод с таким ID не существует")
+                        continue
+                    else:
+                        print_translate(result)
             case "sr":
                 while True:
                     print("================================")
@@ -279,6 +311,7 @@ if __name__ == "__main__":
                         "dc",
                         "m",
                         "ci",
+                        "si",
                     ):
                         break
 
@@ -309,6 +342,7 @@ if __name__ == "__main__":
                         "dc",
                         "m",
                         "ci",
+                        "si",
                     ):
                         break
 
@@ -339,6 +373,7 @@ if __name__ == "__main__":
                         "dc",
                         "m",
                         "sc",
+                        "si",
                     ):
                         break
 
@@ -367,6 +402,7 @@ if __name__ == "__main__":
                         "dc",
                         "m",
                         "ci",
+                        "si",
                     ):
                         break
                     value = input("Введите перевод: ").strip().lower()
@@ -393,6 +429,7 @@ if __name__ == "__main__":
                         "dc",
                         "m",
                         "ci",
+                        "si",
                     ):
                         break
                     value = input("Введите перевод контекста: ").strip()
@@ -415,6 +452,7 @@ if __name__ == "__main__":
                         "dc",
                         "m",
                         "ci",
+                        "si",
                     ):
                         break
                     if var.isdigit():
@@ -426,6 +464,9 @@ if __name__ == "__main__":
                             value = input("Введите перевод (ru): ").strip().lower()
                             comment = input("Введите комментарий: ").strip().lower()
                             update_translate(int(var), word=word, value=value, comment=comment)
+                            print("================================")
+                            print("Новый вариант перевода")
+                            print_translate(d)
                         else:
                             print("Перевода с таким ID не существует!")
                     else:
@@ -447,10 +488,10 @@ if __name__ == "__main__":
                         "dc",
                         "m",
                         "ci",
+                        "si",
                     ):
                         break
                     update_context(int(var))
-
             case "d":
                 while True:
                     var = input()
@@ -466,6 +507,7 @@ if __name__ == "__main__":
                         "dc",
                         "m",
                         "ci",
+                        "si",
                     ):
                         break
                     print("d - пусто")
@@ -486,6 +528,7 @@ if __name__ == "__main__":
                         "d",
                         "m",
                         "ci",
+                        "si",
                     ):
                         break
                     del_context(int(var))

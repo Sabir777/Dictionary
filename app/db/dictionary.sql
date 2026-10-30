@@ -34,7 +34,7 @@ INSERT INTO translations VALUES(11,'you are given','вам дан',1,'в зад�
 INSERT INTO translations VALUES(12,'add up to','в сумме давать',1,'в сумме равняться');
 INSERT INTO translations VALUES(13,'add up to','равняться в сумме',1,NULL);
 INSERT INTO translations VALUES(14,'such that','так, чтобы',1,'условие на выбор элементов');
-INSERT INTO translations VALUES(15,'dick','член',NULL,NULL);
+INSERT INTO translations VALUES(15,'dick','член',NULL,'-');
 INSERT INTO translations VALUES(16,'you may assume','вы можете предположить',2,NULL);
 INSERT INTO translations VALUES(17,'assume','предположить',2,NULL);
 INSERT INTO translations VALUES(18,'each','каждый',2,NULL);
