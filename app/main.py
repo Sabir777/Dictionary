@@ -464,6 +464,8 @@ if __name__ == "__main__":
                             value = input("Введите перевод (ru): ").strip().lower()
                             comment = input("Введите комментарий: ").strip().lower()
                             update_translate(int(var), word=word, value=value, comment=comment)
+                            # Перечитываю строку после изменений
+                            d = get_dictionary_id(int(var))
                             print("================================")
                             print("Новый вариант перевода")
                             print_translate(d)
