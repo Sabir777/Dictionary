@@ -176,10 +176,16 @@ def del_context(_id: int):
                 session.commit()
 
 
-def update_translate(d: Dictionary, **kwargs) -> None:
+def update_translate(_id: int, **kwargs) -> None:
     """Редактировать перeвод"""
     kwargs2 = {k: v for k, v in kwargs.items() if v}
+    if not kwargs2:
+        return
     with Session(engine) as session:
+        d = session.get(Dictionary, _id)
+        if not d:
+            print("Перевода с таким ID не существует!")
+            return
         for k, v in kwargs2.items():
             setattr(d, k, v)
         session.commit()
@@ -419,7 +425,7 @@ if __name__ == "__main__":
                             word =  input("Введите слово (en): ").strip().lower()
                             value = input("Введите перевод (ru): ").strip().lower()
                             comment = input("Введите комментарий: ").strip().lower()
-                            update_translate(d, word=word, value=value, comment=comment)
+                            update_translate(int(var), word=word, value=value, comment=comment)
                         else:
                             print("Перевода с таким ID не существует!")
                     else:
