@@ -8,3 +8,5 @@ rm "$DIR/app/db/dictionary.db"
 
 # Восстанавливаю базу данных из бэкапа
 sqlite3 "$DIR/app/db/dictionary.db" < "$DIR/app/db/dictionary.sql"
+[[ $? -eq 0 ]] && echo "База данных восстановлена"
+
