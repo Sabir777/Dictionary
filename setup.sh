@@ -11,3 +11,12 @@ pip install -r "$DIR/requirements.txt"
 
 # восстанавливаю бэкап базы данных
 sqlite3 "$DIR/app/db/dictionary.db" < "$DIR/app/db/dictionary.sql"
+
+# создаю хук на восстановление БД из бэкапа при git pull
+cat > .git/hooks/post-merge << 'EOF'
+#!/bin/bash
+
+./recovery_db.sh
+EOF
+
+chmod +x .git/hooks/post-merge
