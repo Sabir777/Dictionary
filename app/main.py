@@ -100,6 +100,11 @@ def counter_ref(_id: int) -> int:
         )
         return session.scalar(stmt) or 0
 
+def counter_translate() -> int:
+    """Подсчет количества переводов"""
+    with Session(engine) as session:
+        stmt = select(func.count(Dictionary.id))
+        return session.scalar(stmt) or 0
 
 def max_id(model: type[Dictionary] | type[Context]) -> int:
     """Вернуть максимальный id для таблицы"""
@@ -160,6 +165,20 @@ def print_context(v: Context, title: str | None = None) -> None:
     print()
     Console().print(table)
 
+def del_translate(_id: int):
+    """Удалить перевод по его ID"""
+    with Session(engine) as session:
+        translate = session.get(Dictionary, _id)
+        if not translate:
+            print("Перевод с таким ID не существует")
+        else:
+            print_translate(translate)
+            if (
+                input('Подтвердите удаление перевода - введите "yes": ').strip()
+                == "yes"
+            ):
+                session.delete(translate)
+                session.commit()
 
 def del_context(_id: int):
     """Удалить контекст по его ID"""
@@ -233,10 +252,11 @@ if __name__ == "__main__":
     while var != "q":
         match var:
             case "s":
+            # s - выполнить перевод c английского на русский
                 while True:
                     print("================================")
                     print("Перевод с английского на русский")
-                    print(f"Всего переводов в базе данных: {max_id(Dictionary)}")
+                    print(f"Всего переводов: {counter_translate()}")
                     var = input("Введите слово: ").strip()
                     if var in (
                         "sr",
@@ -264,6 +284,7 @@ if __name__ == "__main__":
                         for i, d in enumerate(result):
                             print_translate(d, str(i + 1))
             case "si":
+            # si - показать перевод по его ID
                 while True:
                     print("================================")
                     print("Получить перевод по его ID")
@@ -285,7 +306,10 @@ if __name__ == "__main__":
                     ):
                         break
 
-                    # Получить контекст
+                    # Получить перевод
+                    if not var.isdigit():
+                        print("Ошибка: вы ввели не число!")
+                        continue
                     result = get_dictionary_id(int(var))
 
                     if not result:
@@ -294,10 +318,11 @@ if __name__ == "__main__":
                     else:
                         print_translate(result)
             case "sr":
+            # sr - выполнить перевод c русского на английский
                 while True:
                     print("================================")
                     print("Перевод с русского на английский")
-                    print(f"Всего переводов в базе данных: {max_id(Dictionary)}")
+                    print(f"Всего переводов: {counter_translate()}")
                     var = input("Введите слово: ").strip()
                     if var in (
                         "s",
@@ -325,6 +350,7 @@ if __name__ == "__main__":
                         for i, d in enumerate(result):
                             print_translate(d, str(i + 1))
             case "sc":
+            # sc - показать один или несколько контекстов по ключевому слову
                 while True:
                     print("================================")
                     print("Получить контексты по ключевому слову")
@@ -356,6 +382,7 @@ if __name__ == "__main__":
                         for i, v in enumerate(result):
                             print_context(v, str(i + 1))
             case "ci":
+            # ci - показать контекст по его ID
                 while True:
                     print("================================")
                     print("Получить контекст по его ID")
@@ -378,6 +405,9 @@ if __name__ == "__main__":
                         break
 
                     # Получить контекст
+                    if not var.isdigit():
+                        print("Ошибка: вы ввели не число!")
+                        continue
                     result = get_context_id(int(var))
 
                     if not result:
@@ -386,6 +416,7 @@ if __name__ == "__main__":
                     else:
                         print_context(result)
             case "a":
+            # a - добавить новый перевод
                 while True:
                     print("================================")
                     print("Добавить перевод")
@@ -413,6 +444,7 @@ if __name__ == "__main__":
                         word=var.lower(), value=value, context=context, comment=comment
                     )
             case "ac":
+            # ac - добавить новый контекст
                 while True:
                     print("================================")
                     print("Добавить контекст")
@@ -436,6 +468,7 @@ if __name__ == "__main__":
                     if var and value:
                         add_context(context_en=var, context_ru=value)
             case "u":
+            # u - редактировать перевод
                 while True:
                     print("================================")
                     print("Редактировать перевод")
@@ -474,6 +507,7 @@ if __name__ == "__main__":
                     else:
                         print("Ошибка: вы ввели не число!")
             case "uc":
+            # uc - редактировать контекст
                 while True:
                     print("================================")
                     print("Редактировать контекст")
@@ -493,10 +527,18 @@ if __name__ == "__main__":
                         "si",
                     ):
                         break
+
+                    # Редактировать контекст
+                    if not var.isdigit():
+                        print("Ошибка: вы ввели не число!")
+                        continue
                     update_context(int(var))
             case "d":
+            # d - удалить перевод
                 while True:
-                    var = input()
+                    print("================================")
+                    print("Удалить перевод")
+                    var = input("Введите ID удаляемого перевода: ")
                     if var in (
                         "sr",
                         "s",
@@ -512,8 +554,14 @@ if __name__ == "__main__":
                         "si",
                     ):
                         break
-                    print("d - пусто")
+
+                    # Удалить перевод
+                    if not var.isdigit():
+                        print("Ошибка: вы ввели не число!")
+                        continue
+                    del_translate(int(var))
             case "dc":
+            # dc - удалить контекст
                 while True:
                     print("================================")
                     print("Удалить контекст")
@@ -533,8 +581,14 @@ if __name__ == "__main__":
                         "si",
                     ):
                         break
+
+                    # Удалить контекст
+                    if not var.isdigit():
+                        print("Ошибка: вы ввели не число!")
+                        continue
                     del_context(int(var))
             case "m":
+            # m - показать горячие клавиши
                 menu()
                 var = "s"
             case _:
