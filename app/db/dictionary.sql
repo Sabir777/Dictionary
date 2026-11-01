@@ -12,6 +12,7 @@ INSERT INTO contexts VALUES(2,'You may assume that each input would have exactly
 INSERT INTO contexts VALUES(3,'You can return the answer in any order.','Вы можете вернуть ответ в любом порядке.');
 INSERT INTO contexts VALUES(4,'You are given two non-empty linked lists representing two non-negative integers.','Вам даны два непустых связанных списка, представляющих два неотрицательных целых числа.');
 INSERT INTO contexts VALUES(5,'The digits are stored in reverse order, and each of their nodes contains a single digit.','Цифры хранятся в обратном порядке, и каждый их узел содержит одну цифру.');
+INSERT INTO contexts VALUES(6,'Add the two numbers and return the sum as a linked list.','Сложите два числа и верните сумму в виде связанного списка.');
 CREATE TABLE translations (
 	id INTEGER NOT NULL, 
 	word TEXT NOT NULL, 
@@ -91,4 +92,12 @@ INSERT INTO translations VALUES(66,'a single digit','одна цифра',5,NULL
 INSERT INTO translations VALUES(67,'stored in reverse order','хранятся в обратном порядке',5,NULL);
 INSERT INTO translations VALUES(68,'each of their nodes','каждый их узел',5,NULL);
 INSERT INTO translations VALUES(69,'contains a single digit','содержит одну цифру',5,NULL);
+INSERT INTO translations VALUES(70,'add','сложить',6,NULL);
+INSERT INTO translations VALUES(71,'the two numbers','два числа',6,NULL);
+INSERT INTO translations VALUES(72,'the sum','сумма',6,NULL);
+INSERT INTO translations VALUES(73,'as','в виде',6,'as здесь указывает на форму представления результата');
+INSERT INTO translations VALUES(74,'a linked list','связанный список',6,NULL);
+INSERT INTO translations VALUES(75,'add the two numbers','сложить два числа',6,NULL);
+INSERT INTO translations VALUES(76,'return the sum','вернуть сумму',6,NULL);
+INSERT INTO translations VALUES(77,'as a linked list','в виде связанного списка',6,NULL);
 COMMIT;
