@@ -13,6 +13,7 @@ INSERT INTO contexts VALUES(3,'You can return the answer in any order.','Вы м
 INSERT INTO contexts VALUES(4,'You are given two non-empty linked lists representing two non-negative integers.','Вам даны два непустых связанных списка, представляющих два неотрицательных целых числа.');
 INSERT INTO contexts VALUES(5,'The digits are stored in reverse order, and each of their nodes contains a single digit.','Цифры хранятся в обратном порядке, и каждый их узел содержит одну цифру.');
 INSERT INTO contexts VALUES(6,'Add the two numbers and return the sum as a linked list.','Сложите два числа и верните сумму в виде связанного списка.');
+INSERT INTO contexts VALUES(7,'You may assume the two numbers do not contain any leading zero, except the number 0 itself.','Вы можете предположить, что два числа не содержат ведущих нулей, за исключением самого числа 0.');
 CREATE TABLE translations (
 	id INTEGER NOT NULL, 
 	word TEXT NOT NULL, 
@@ -100,4 +101,16 @@ INSERT INTO translations VALUES(74,'a linked list','связанный спис�
 INSERT INTO translations VALUES(75,'add the two numbers','сложить два числа',6,NULL);
 INSERT INTO translations VALUES(76,'return the sum','вернуть сумму',6,NULL);
 INSERT INTO translations VALUES(77,'as a linked list','в виде связанного списка',6,NULL);
+INSERT INTO translations VALUES(78,'do not contain','не содержат',7,'do not = отрицание в настоящем времени');
+INSERT INTO translations VALUES(79,'contain','содержать',7,NULL);
+INSERT INTO translations VALUES(80,'any','никакие',7,'в отрицательном предложении any = ни один, никакие');
+INSERT INTO translations VALUES(81,'leading zero','ведущий ноль',7,'нули в начале числа');
+INSERT INTO translations VALUES(82,'leading','ведущий',7,'в числах: стоящий в начале');
+INSERT INTO translations VALUES(83,'zero','ноль',7,NULL);
+INSERT INTO translations VALUES(84,'except','за исключением',7,NULL);
+INSERT INTO translations VALUES(85,'the number 0','число 0',7,NULL);
+INSERT INTO translations VALUES(86,'itself','сам',7,'itself усиливает: именно само число, а не другие');
+INSERT INTO translations VALUES(87,'0 itself','сам 0',7,NULL);
+INSERT INTO translations VALUES(88,'do not contain any leading zero','не содержат ведущих нулей',7,NULL);
+INSERT INTO translations VALUES(89,'except the number 0 itself','за исключением самого числа 0',7,NULL);
 COMMIT;
