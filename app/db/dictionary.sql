@@ -11,6 +11,7 @@ INSERT INTO contexts VALUES(1,'You are given an array of integers nums and an in
 INSERT INTO contexts VALUES(2,'You may assume that each input would have exactly one solution, and you may not use the same element twice.','Вы можете предположить, что у каждого входного значения будет ровно одно решение, и вы не можете использовать один и тот же элемент дважды.');
 INSERT INTO contexts VALUES(3,'You can return the answer in any order.','Вы можете вернуть ответ в любом порядке.');
 INSERT INTO contexts VALUES(4,'You are given two non-empty linked lists representing two non-negative integers.','Вам даны два непустых связанных списка, представляющих два неотрицательных целых числа.');
+INSERT INTO contexts VALUES(5,'The digits are stored in reverse order, and each of their nodes contains a single digit.','Цифры хранятся в обратном порядке, и каждый их узел содержит одну цифру.');
 CREATE TABLE translations (
 	id INTEGER NOT NULL, 
 	word TEXT NOT NULL, 
@@ -74,4 +75,20 @@ INSERT INTO translations VALUES(50,'negative','отрицательный',4,NUL
 INSERT INTO translations VALUES(51,'two non-empty linked lists','два непустых связанных списка',4,NULL);
 INSERT INTO translations VALUES(52,'two non-negative integers','два неотрицательных целых числа',4,NULL);
 INSERT INTO translations VALUES(53,'representing two integers','представляющий два целых числа',4,NULL);
+INSERT INTO translations VALUES(54,'the digits','цифры',5,NULL);
+INSERT INTO translations VALUES(55,'digit','цифра',5,NULL);
+INSERT INTO translations VALUES(56,'are stored','хранятся',5,'страдательный залог: store → хранить');
+INSERT INTO translations VALUES(57,'store','хранить',5,NULL);
+INSERT INTO translations VALUES(58,'in reverse order','в обратном порядке',5,NULL);
+INSERT INTO translations VALUES(59,'reverse','обратный',5,NULL);
+INSERT INTO translations VALUES(60,'of their nodes','из их узлов',5,'of здесь выражает принадлежность/выделение части из целого');
+INSERT INTO translations VALUES(61,'their','их',5,NULL);
+INSERT INTO translations VALUES(62,'node','узел',5,'элемент связного списка, дерева, графа');
+INSERT INTO translations VALUES(63,'contains','содержит',5,NULL);
+INSERT INTO translations VALUES(64,'a single','один единственный',5,'single усиливает значение: ровно один');
+INSERT INTO translations VALUES(65,'single','единственный',5,NULL);
+INSERT INTO translations VALUES(66,'a single digit','одна цифра',5,NULL);
+INSERT INTO translations VALUES(67,'stored in reverse order','хранятся в обратном порядке',5,NULL);
+INSERT INTO translations VALUES(68,'each of their nodes','каждый их узел',5,NULL);
+INSERT INTO translations VALUES(69,'contains a single digit','содержит одну цифру',5,NULL);
 COMMIT;
