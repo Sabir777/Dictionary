@@ -465,8 +465,13 @@ if __name__ == "__main__":
                     ):
                         break
                     value = input("Введите перевод контекста: ").strip()
+                    old_id = max_id(Context)
                     if var and value:
                         add_context(context_en=var, context_ru=value)
+                        new_id = max_id(Context)
+                        if old_id != new_id:
+                            print(f"Был создан новый контекст (ID: {new_id}")
+
             case "u":
             # u - редактировать перевод
                 while True:

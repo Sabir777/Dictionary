@@ -14,6 +14,7 @@ INSERT INTO contexts VALUES(4,'You are given two non-empty linked lists represen
 INSERT INTO contexts VALUES(5,'The digits are stored in reverse order, and each of their nodes contains a single digit.','Цифры хранятся в обратном порядке, и каждый их узел содержит одну цифру.');
 INSERT INTO contexts VALUES(6,'Add the two numbers and return the sum as a linked list.','Сложите два числа и верните сумму в виде связанного списка.');
 INSERT INTO contexts VALUES(7,'You may assume the two numbers do not contain any leading zero, except the number 0 itself.','Вы можете предположить, что два числа не содержат ведущих нулей, за исключением самого числа 0.');
+INSERT INTO contexts VALUES(8,'Given a string s, find the length of the longest substring without duplicate characters.','Дана строка s, найдите длину самой длинной подстроки без повторяющихся символов.');
 CREATE TABLE translations (
 	id INTEGER NOT NULL, 
 	word TEXT NOT NULL, 
@@ -113,4 +114,24 @@ INSERT INTO translations VALUES(86,'itself','сам',7,'itself усиливае�
 INSERT INTO translations VALUES(87,'0 itself','сам 0',7,NULL);
 INSERT INTO translations VALUES(88,'do not contain any leading zero','не содержат ведущих нулей',7,NULL);
 INSERT INTO translations VALUES(89,'except the number 0 itself','за исключением самого числа 0',7,NULL);
+INSERT INTO translations VALUES(90,'given','дана',8,'Given a... = «дано/дана...», типичное начало условия задачи');
+INSERT INTO translations VALUES(91,'a string','строка',8,NULL);
+INSERT INTO translations VALUES(92,'string','строка',8,NULL);
+INSERT INTO translations VALUES(93,'find','найти',8,'в условии: найдите');
+INSERT INTO translations VALUES(94,'the length','длина',8,NULL);
+INSERT INTO translations VALUES(95,'length','длина',8,NULL);
+INSERT INTO translations VALUES(96,'of','из / чего-либо',8,'в «length of» передаётся родительным падежом: длина чего-то');
+INSERT INTO translations VALUES(97,'the longest','самый длинный',8,NULL);
+INSERT INTO translations VALUES(98,'longest','самый длинный',8,'превосходная степень от long');
+INSERT INTO translations VALUES(99,'substring','подстрока',8,NULL);
+INSERT INTO translations VALUES(100,'without','без',8,NULL);
+INSERT INTO translations VALUES(101,'duplicate','повторяющийся',8,'здесь прилагательное; как глагол: дублировать');
+INSERT INTO translations VALUES(102,'characters','символы',8,NULL);
+INSERT INTO translations VALUES(103,'character','символ',8,NULL);
+INSERT INTO translations VALUES(104,'given a string','дана строка',8,NULL);
+INSERT INTO translations VALUES(105,'the length of','длина',8,NULL);
+INSERT INTO translations VALUES(106,'the longest substring','самая длинная подстрока',8,NULL);
+INSERT INTO translations VALUES(107,'length of the longest substring','длина самой длинной подстроки',8,NULL);
+INSERT INTO translations VALUES(108,'without duplicate characters','без повторяющихся символов',8,NULL);
+INSERT INTO translations VALUES(109,'duplicate characters','повторяющиеся символы',8,NULL);
 COMMIT;
